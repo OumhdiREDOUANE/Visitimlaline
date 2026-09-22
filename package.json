@@ -1,20 +1,12 @@
 {
   "name": "visitimlaline",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "A premium Timlaline adventure booking platform.",
+  "engines": { "node": ">=22.5.0" },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "16.3.5",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "babel-plugin-react-compiler": "1.0.0",
-    "tailwindcss": "^4"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
   }
 }
