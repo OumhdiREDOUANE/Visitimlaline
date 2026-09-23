@@ -5,8 +5,9 @@
   "description": "A premium Timlaline adventure booking platform.",
   "engines": { "node": ">=22.5.0" },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "test": "node --test"
-  }
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "test": "node --test"
+}
 }

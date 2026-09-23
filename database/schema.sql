@@ -107,4 +107,49 @@ CREATE INDEX IF NOT EXISTS idx_notifications_booking
 
 CREATE INDEX IF NOT EXISTS idx_notifications_read
     ON notifications(read_at);
-    
+-- ============================================
+-- USERS
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('admin', 'staff')),
+    active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- SESSIONS
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    token_hash TEXT NOT NULL UNIQUE,
+    expires_at TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_used_at TEXT,
+
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email
+    ON users(email);
+
+CREATE INDEX IF NOT EXISTS idx_users_role
+    ON users(role);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_user
+    ON sessions(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_token_hash
+    ON sessions(token_hash);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_expires
+    ON sessions(expires_at);

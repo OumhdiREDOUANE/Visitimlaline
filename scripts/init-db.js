@@ -5,7 +5,7 @@ const { DatabaseSync } = require('node:sqlite');
 
 const root = process.cwd();
 
-const databasePath = path.join(root, 'data', 'visimlaline.sqlite');
+const databasePath = path.join(root, 'data', 'visitmlaline.sqlite');
 const schemaPath = path.join(root, 'database', 'schema.sql');
 
 fs.mkdirSync(path.dirname(databasePath), { recursive: true });
