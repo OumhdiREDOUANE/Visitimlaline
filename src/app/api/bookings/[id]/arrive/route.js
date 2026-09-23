@@ -1,7 +1,10 @@
+import { requireRole } from '@/lib/auth';
 import { markBookingArrived } from '@/lib/services/booking.service';
 
 export async function POST(request, { params }) {
   try {
+    const user = requireRole(request, ['admin', 'staff']);
+
     const { id } = await params;
 
     if (!id || !/^\d+$/.test(id)) {
@@ -24,8 +27,6 @@ export async function POST(request, { params }) {
       { status: 200 }
     );
   } catch (error) {
-    
-
     const status = error.status || 500;
 
     return Response.json(

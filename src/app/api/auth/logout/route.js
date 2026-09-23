@@ -28,7 +28,7 @@ export async function POST(request) {
     );
 
     response.cookies.set(
-      'visimlaline_session',
+      'visitmlaline_session',
       '',
       {
         httpOnly: true,

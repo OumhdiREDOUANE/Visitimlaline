@@ -1,7 +1,10 @@
+import { requireRole } from '@/lib/auth';
 import { getAdminBookings } from '@/lib/services/booking.service';
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const user = requireRole(request, ['admin', 'staff']);
+
     const bookings = getAdminBookings();
 
     return Response.json(
@@ -14,15 +17,18 @@ export async function GET() {
       }
     );
   } catch (error) {
-    
+    const status = error.status || 500;
 
     return Response.json(
       {
         success: false,
-        error: 'Failed to fetch admin bookings',
+        error:
+          status === 500
+            ? 'Failed to fetch admin bookings'
+            : error.message,
       },
       {
-        status: 500,
+        status,
       }
     );
   }
