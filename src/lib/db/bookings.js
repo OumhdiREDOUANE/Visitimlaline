@@ -56,6 +56,8 @@ export function findDuplicateBooking(
 export function createBooking(data) {
   const statement = db.prepare(`
     INSERT INTO bookings (
+    booking_reference,
+  access_code,
       activity_slug,
       pack_slug,
       customer_name,
@@ -73,6 +75,8 @@ export function createBooking(data) {
   `);
 
   const result = statement.run(
+      data.booking_reference,
+  data.access_code,
     data.activity_slug,
     data.pack_slug ?? null,
     data.customer_name,
@@ -94,6 +98,8 @@ export function getBookingById(id) {
   const statement = db.prepare(`
     SELECT
       id,
+       booking_reference,
+      access_code,
       activity_slug,
       pack_slug,
       customer_name,
@@ -136,6 +142,8 @@ export function getAllBookings({
   let query = `
     SELECT
       id,
+      booking_reference,
+      access_code,
       activity_slug,
       pack_slug,
       customer_name,
@@ -204,4 +212,38 @@ export function rescheduleBooking(id, date, time) {
   const result = statement.run(date, time, id);
 
   return result.changes;
+}
+export function getBookingByAccess(
+  bookingReference,
+  accessCode
+) {
+  const statement = db.prepare(`
+    SELECT
+      id,
+      booking_reference,
+     
+      activity_slug,
+      pack_slug,
+      customer_name,
+      email,
+      phone,
+      date,
+      time,
+      guests,
+      base_price,
+      addon_price,
+      total_price,
+      status,
+      created_at,
+      arrived_at
+    FROM bookings
+    WHERE booking_reference = ?
+      AND access_code = ?
+    LIMIT 1
+  `);
+
+  return statement.get(
+    bookingReference,
+    accessCode
+  );
 }

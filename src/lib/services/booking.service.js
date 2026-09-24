@@ -1,4 +1,5 @@
 import { getActivityBySlug } from '../db/activities';
+import crypto from 'node:crypto';
 
 import {
   createBooking,
@@ -6,6 +7,7 @@ import {
   getBookedGuests,
   getBookingById,
   markBookingAsArrived,
+   getBookingByAccess,
   getAllBookings,
   cancelBooking,
   rescheduleBooking,
@@ -27,8 +29,23 @@ import { calculateActivityPrice } from './pricing.service';
 
 import { validateBooking } from '../validation/booking.validation';
 
-
 import { createArrivalNotification } from './notification.service';
+function generateBookingReference() {
+  return `BK-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+}
+
+function generateAccessCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+  let code = '';
+
+  for (let i = 0; i < 12; i++) {
+    const index = crypto.randomInt(0, chars.length);
+    code += chars[index];
+  }
+
+  return `${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
+}
 export function createNewBooking(data) {
   // ==========================================
   // 1. VALIDATION
@@ -143,8 +160,12 @@ export function createNewBooking(data) {
     // ------------------------------------------
     // Create booking
     // ------------------------------------------
+const bookingReference = generateBookingReference();
+const accessCode = generateAccessCode();
 
-    const bookingId = createBooking({
+const bookingId = createBooking({
+  booking_reference: bookingReference,
+  access_code: accessCode,
       activity_slug: activitySlug,
       pack_slug: null,
       customer_name: data.customer_name.trim(),
@@ -363,4 +384,106 @@ export function getAdminBookingDetails(id) {
   }
 
   return booking;
+}
+export function getBookingByGuestAccess(
+  bookingReference,
+  accessCode
+) {
+  const reference = bookingReference?.trim();
+  const code = accessCode?.trim();
+
+  if (!reference || !code) {
+    const error = new Error(
+      'Booking reference and access code are required'
+    );
+
+    error.status = 422;
+    throw error;
+  }
+
+  const booking = getBookingByAccess(
+    reference,
+    code
+  );
+
+  if (!booking) {
+    const error = new Error(
+      'Invalid booking reference or access code'
+    );
+
+    error.status = 401;
+    throw error;
+  }
+
+  return booking;
+}
+export async function markBookingArrivedByAccess(
+  bookingReference,
+  accessCode
+) {
+  const reference = bookingReference?.trim();
+  const code = accessCode?.trim();
+
+  if (!reference || !code) {
+    const error = new Error(
+      'Booking reference and access code are required'
+    );
+
+    error.status = 422;
+    throw error;
+  }
+
+  const booking = getBookingByAccess(
+    reference,
+    code
+  );
+
+  if (!booking) {
+    const error = new Error(
+      'Invalid booking reference or access code'
+    );
+
+    error.status = 404;
+    throw error;
+  }
+
+  if (booking.status === 'ARRIVED') {
+    const error = new Error(
+      'Booking is already marked as arrived'
+    );
+
+    error.status = 409;
+    throw error;
+  }
+
+  if (booking.status === 'CANCELLED') {
+    const error = new Error(
+      'Cannot mark a cancelled booking as arrived'
+    );
+
+    error.status = 409;
+    throw error;
+  }
+
+  const changes = markBookingAsArrived(
+    booking.id
+  );
+
+  if (changes === 0) {
+    const error = new Error(
+      'Unable to mark booking as arrived'
+    );
+
+    error.status = 409;
+    throw error;
+  }
+
+  const updatedBooking =
+    getBookingById(booking.id);
+
+  await createArrivalNotification(
+    updatedBooking
+  );
+
+  return updatedBooking;
 }

@@ -1,23 +1,20 @@
 import { requireRole } from '@/lib/auth';
-import { markBookingArrived } from '@/lib/services/booking.service';
+import {  markBookingArrivedByAccess } from '@/lib/services/booking.service';
 
-export async function POST(request, { params }) {
+export async function POST(request) {
   try {
     const user = requireRole(request, ['admin', 'staff']);
 
-    const { id } = await params;
+   const body = await request.json();
 
-    if (!id || !/^\d+$/.test(id)) {
-      return Response.json(
-        {
-          success: false,
-          error: 'Invalid booking ID',
-        },
-        { status: 400 }
+  
+
+    const booking =
+      await markBookingArrivedByAccess(
+        body.booking_reference,
+        body.access_code
       );
-    }
 
-    const booking = markBookingArrived(Number(id));
 
     return Response.json(
       {
