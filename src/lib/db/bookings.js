@@ -129,8 +129,11 @@ export function markBookingAsArrived(id) {
 
   return result.changes;
 }
-export function getAllBookings() {
-  const statement = db.prepare(`
+export function getAllBookings({
+  status = null,
+  activity = null,
+} = {}) {
+  let query = `
     SELECT
       id,
       activity_slug,
@@ -148,8 +151,57 @@ export function getAllBookings() {
       created_at,
       arrived_at
     FROM bookings
+  `;
+
+  const conditions = [];
+  const params = [];
+
+  if (status) {
+    conditions.push(`status = ?`);
+    params.push(status);
+  }
+
+  if (activity) {
+    conditions.push(`activity_slug = ?`);
+    params.push(activity);
+  }
+
+  if (conditions.length > 0) {
+    query += ` WHERE ${conditions.join(' AND ')}`;
+  }
+
+  query += `
     ORDER BY date ASC, time ASC, id DESC
+  `;
+
+  const statement = db.prepare(query);
+
+  return statement.all(...params);
+}
+export function cancelBooking(id) {
+  const statement = db.prepare(`
+    UPDATE bookings
+    SET status = 'CANCELLED'
+    WHERE id = ?
+      AND status != 'CANCELLED'
   `);
 
-  return statement.all();
+  const result = statement.run(id);
+
+  return result.changes;
+}
+export function rescheduleBooking(id, date, time) {
+  const statement = db.prepare(`
+    UPDATE bookings
+    SET
+      date = ?,
+      time = ?
+    WHERE id = ?
+      AND status != 'CANCELLED'
+      AND status != 'ARRIVED'
+  `);
+
+  const result = statement.run(date, time, id);
+
+  return result.changes;
 }

@@ -3,13 +3,25 @@ import { getAdminBookings } from '@/lib/services/booking.service';
 
 export async function GET(request) {
   try {
-    const user = requireRole(request, ['admin', 'staff']);
+    requireRole(request, ['admin', 'staff']);
 
-    const bookings = getAdminBookings();
+    const { searchParams } = new URL(request.url);
+
+    const status = searchParams.get('status');
+    const activity = searchParams.get('activity');
+
+    const bookings = getAdminBookings({
+      status: status || null,
+      activity: activity || null,
+    });
 
     return Response.json(
       {
         success: true,
+        filters: {
+          status: status || null,
+          activity: activity || null,
+        },
         data: bookings,
       },
       {
@@ -17,18 +29,18 @@ export async function GET(request) {
       }
     );
   } catch (error) {
-    const status = error.status || 500;
+    const statusCode = error.status || 500;
 
     return Response.json(
       {
         success: false,
         error:
-          status === 500
+          statusCode === 500
             ? 'Failed to fetch admin bookings'
             : error.message,
       },
       {
-        status,
+        status: statusCode,
       }
     );
   }

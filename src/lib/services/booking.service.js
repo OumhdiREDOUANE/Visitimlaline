@@ -6,7 +6,10 @@ import {
   getBookedGuests,
   getBookingById,
   markBookingAsArrived,
-  getAllBookings
+  getAllBookings,
+  cancelBooking,
+  rescheduleBooking,
+
 } from '../db/bookings';
 
 import {
@@ -166,7 +169,7 @@ export function createNewBooking(data) {
     throw error;
   }
 }
-export function markBookingArrived(id) {
+export async function   markBookingArrived(id) {
   const booking = getBookingById(id);
 
   if (!booking) {
@@ -191,12 +194,173 @@ export function markBookingArrived(id) {
 
   const updatedBooking = getBookingById(id);
 
-  createArrivalNotification(updatedBooking);
+  await createArrivalNotification(updatedBooking);
 
   return updatedBooking;
 }
 
 
-export function getAdminBookings() {
-  return getAllBookings();
+export function getAdminBookings(filters = {}) {
+  return getAllBookings(filters);
+}
+export function cancelAdminBooking(id) {
+  const booking = getBookingById(id);
+
+  if (!booking) {
+    const error = new Error('Booking not found');
+    error.status = 404;
+    throw error;
+  }
+
+  if (booking.status === 'CANCELLED') {
+    const error = new Error('Booking is already cancelled');
+    error.status = 409;
+    throw error;
+  }
+
+  if (booking.status === 'ARRIVED') {
+    const error = new Error(
+      'Cannot cancel a booking that has already arrived'
+    );
+    error.status = 409;
+    throw error;
+  }
+
+  const changes = cancelBooking(id);
+
+  if (changes === 0) {
+    const error = new Error('Unable to cancel booking');
+    error.status = 409;
+    throw error;
+  }
+
+  return getBookingById(id);
+}
+export function rescheduleAdminBooking(id, data) {
+  const booking = getBookingById(id);
+
+  if (!booking) {
+    const error = new Error('Booking not found');
+    error.status = 404;
+    throw error;
+  }
+
+  if (booking.status === 'CANCELLED') {
+    const error = new Error(
+      'Cannot reschedule a cancelled booking'
+    );
+    error.status = 409;
+    throw error;
+  }
+
+  if (booking.status === 'ARRIVED') {
+    const error = new Error(
+      'Cannot reschedule a booking that has already arrived'
+    );
+    error.status = 409;
+    throw error;
+  }
+
+  const date = data.date?.trim();
+  const time = data.time?.trim();
+
+  if (!date || !time) {
+    const error = new Error(
+      'Date and time are required'
+    );
+    error.status = 422;
+    throw error;
+  }
+
+  if (!SLOTS.includes(time)) {
+    const error = new Error('Invalid time slot');
+    error.status = 422;
+    throw error;
+  }
+
+  // إذا ما تبدل والو
+  if (
+    booking.date === date &&
+    booking.time === time
+  ) {
+    const error = new Error(
+      'Booking is already scheduled for this date and time'
+    );
+    error.status = 409;
+    throw error;
+  }
+
+  // Check duplicate booking
+  const duplicate = findDuplicateBooking(
+    booking.activity_slug,
+    booking.email,
+    date,
+    time
+  );
+
+  if (
+    duplicate &&
+    Number(duplicate.id) !== Number(id)
+  ) {
+    const error = new Error(
+      'A booking already exists for this customer, activity, date and time'
+    );
+
+    error.status = 409;
+    error.booking = duplicate;
+
+    throw error;
+  }
+
+  // Check capacity
+  const bookedGuests = getBookedGuests(
+    booking.activity_slug,
+    date,
+    time
+  );
+
+  const remainingGuests =
+    CAPACITY_PER_SLOT - bookedGuests;
+
+  if (booking.guests > remainingGuests) {
+    const error = new Error(
+      `Only ${Math.max(remainingGuests, 0)} guest(s) remaining for this slot`
+    );
+
+    error.status = 409;
+    error.booked_guests = bookedGuests;
+    error.remaining_guests = Math.max(
+      remainingGuests,
+      0
+    );
+
+    throw error;
+  }
+
+  const changes = rescheduleBooking(
+    id,
+    date,
+    time
+  );
+
+  if (changes === 0) {
+    const error = new Error(
+      'Unable to reschedule booking'
+    );
+    error.status = 409;
+    throw error;
+  }
+
+  return getBookingById(id);
+}
+export function getAdminBookingDetails(id) {
+  const booking = getBookingById(id);
+
+  if (!booking) {
+    const error = new Error('Booking not found');
+    error.status = 404;
+    throw error;
+  }
+
+  return booking;
 }
