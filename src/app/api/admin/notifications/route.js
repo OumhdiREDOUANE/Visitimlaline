@@ -1,3 +1,4 @@
+import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
 
 import {
@@ -6,7 +7,7 @@ import {
   getAdminReadNotifications,
 } from '@/lib/services/notification.service';
 
-export async function GET(request) {
+async function handleGET(request) {
   try {
     requireRole(request, ['admin']);
 
@@ -61,3 +62,5 @@ export async function GET(request) {
     );
   }
 }
+
+export const GET = logRequest(handleGET, 'GET /api/admin/notifications');

@@ -1,9 +1,12 @@
-import { getCurrentUser } from '../services/auth.service';
+import { getCurrentUser } from '../services/auth.service.js';
+
+export const SESSION_COOKIE = 'visitmlaline_session';
 
 export function getTokenFromRequest(request) {
-  return request.cookies.get(
-    'visitmlaline_session'
-  )?.value || null;
+  return (
+    request.cookies.get(SESSION_COOKIE)?.value ||
+    null
+  );
 }
 
 export function getAuthenticatedUser(request) {

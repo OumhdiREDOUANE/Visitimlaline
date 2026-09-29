@@ -1,8 +1,10 @@
+import { logRequest } from '@/lib/observability/route';
 import {
   getBookingByGuestAccess,
+  toGuestTicket,
 } from '@/lib/services/booking.service';
 
-export async function POST(request) {
+async function handlePOST(request) {
   try {
     const body = await request.json();
 
@@ -13,7 +15,7 @@ export async function POST(request) {
 
     return Response.json({
       success: true,
-      data: booking,
+      data: await toGuestTicket(booking),
     });
   } catch (error) {
     const status = error.status || 500;
@@ -32,3 +34,8 @@ export async function POST(request) {
     );
   }
 }
+
+export const POST = logRequest(
+  handlePOST,
+  'POST /api/bookings/access'
+);

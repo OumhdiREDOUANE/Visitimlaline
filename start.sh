@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-exec node server.js
+exec npm run start

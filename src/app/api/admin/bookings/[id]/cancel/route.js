@@ -1,10 +1,12 @@
+import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
 
 import {
   cancelAdminBooking,
+  toAdminBooking,
 } from '@/lib/services/booking.service';
 
-export async function PATCH(request, { params }) {
+async function handlePATCH(request, { params }) {
   try {
     requireRole(request, ['admin', 'staff']);
 
@@ -26,7 +28,7 @@ export async function PATCH(request, { params }) {
       {
         success: true,
         message: 'Booking cancelled successfully',
-        data: booking,
+        data: toAdminBooking(booking),
       },
       { status: 200 }
     );
@@ -45,3 +47,5 @@ export async function PATCH(request, { params }) {
     );
   }
 }
+
+export const PATCH = logRequest(handlePATCH, 'PATCH /api/admin/bookings/{id}/cancel');

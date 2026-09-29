@@ -1,17 +1,13 @@
+import { logger } from '@/lib/observability/logger';
+import { logRequest } from '@/lib/observability/route';
 import { NextResponse } from 'next/server';
 
-import {
-  getTokenFromRequest,
-} from '@/lib/auth';
+import { getTokenFromRequest, SESSION_COOKIE } from '@/lib/auth';
+import { logoutUser } from '@/lib/services/auth.service';
 
-import {
-  logoutUser,
-} from '@/lib/services/auth.service';
-
-export async function POST(request) {
+async function handlePOST(request) {
   try {
-    const token =
-      getTokenFromRequest(request);
+    const token = getTokenFromRequest(request);
 
     if (token) {
       logoutUser(token);
@@ -27,25 +23,19 @@ export async function POST(request) {
       }
     );
 
-    response.cookies.set(
-      'visitmlaline_session',
-      '',
-      {
-        httpOnly: true,
-        secure:
-          process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 0,
-      }
-    );
+    response.cookies.set(SESSION_COOKIE, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 0,
+    });
 
     return response;
   } catch (error) {
-    console.error(
-      'POST /api/auth/logout error:',
-      error
-    );
+    logger.error('auth.logout_failed', {
+      error,
+    });
 
     return Response.json(
       {
@@ -58,3 +48,8 @@ export async function POST(request) {
     );
   }
 }
+
+export const POST = logRequest(
+  handlePOST,
+  'POST /api/auth/logout'
+);

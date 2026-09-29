@@ -1,4 +1,5 @@
-import { getActivityBySlug } from '../db/activities';
+import { getActivityBySlug } from '../db/activities.js';
+import { getPackBySlug } from '../db/packs.js';
 import crypto from 'node:crypto';
 
 import {
@@ -12,24 +13,24 @@ import {
   cancelBooking,
   rescheduleBooking,
 
-} from '../db/bookings';
+} from '../db/bookings.js';
 
 import {
   dbTransaction,
   commitTransaction,
   rollbackTransaction,
-} from '../db/index';
+} from '../db/index.js';
 
 import {
   SLOTS,
   CAPACITY_PER_SLOT,
-} from './availability.service';
+} from './availability.service.js';
 
-import { calculateActivityPrice } from './pricing.service';
+import { calculateBookingPrice } from './pricing.service.js';
 
-import { validateBooking } from '../validation/booking.validation';
+import { validateBooking } from '../validation/booking.validation.js';
 
-import { createArrivalNotification } from './notification.service';
+import { createArrivalNotification } from './notification.service.js';
 function generateBookingReference() {
   return `BK-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 }
@@ -46,6 +47,31 @@ function generateAccessCode() {
 
   return `${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
 }
+
+/**
+ * An access code lets a guest open their own ticket, so it must never leave
+ * the admin endpoints: only its last block stays readable for support.
+ */
+export function toAdminBooking(booking) {
+  if (!booking) {
+    return null;
+  }
+
+  const { access_code: accessCode, ...rest } = booking;
+
+  return {
+    ...rest,
+    access_code_hint: accessCode
+      ? `••••-••••-${String(accessCode).slice(-4)}`
+      : null,
+  };
+}
+
+function readSlug(value) {
+  return typeof value === 'string'
+    ? value.trim()
+    : '';
+}
 export function createNewBooking(data) {
   // ==========================================
   // 1. VALIDATION
@@ -60,10 +86,12 @@ export function createNewBooking(data) {
     throw error;
   }
 
-  const activitySlug = data.activity_slug.trim();
+  const activitySlug = readSlug(data.activity_slug);
+  const packSlug = readSlug(data.pack_slug);
   const email = data.email.trim().toLowerCase();
   const time = data.time.trim();
   const guests = Number(data.guests);
+  const scope = { activitySlug, packSlug };
 
   // ==========================================
   // 2. VALID TIME SLOT
@@ -76,13 +104,22 @@ export function createNewBooking(data) {
   }
 
   // ==========================================
-  // 3. GET ACTIVITY FROM DATABASE
+  // 3. RESOLVE THE BOOKED PRODUCT
   // ==========================================
 
-  const activity = getActivityBySlug(activitySlug);
+  let source;
+  let missingLabel;
 
-  if (!activity) {
-    const error = new Error('Activity not found');
+  if (activitySlug) {
+    source = getActivityBySlug(activitySlug);
+    missingLabel = 'Activity not found';
+  } else {
+    source = getPackBySlug(packSlug);
+    missingLabel = 'Pack not found';
+  }
+
+  if (!source) {
+    const error = new Error(missingLabel);
     error.status = 404;
     throw error;
   }
@@ -92,7 +129,7 @@ export function createNewBooking(data) {
   // ==========================================
 
   const duplicate = findDuplicateBooking(
-    activitySlug,
+    scope,
     email,
     data.date,
     time
@@ -100,7 +137,7 @@ export function createNewBooking(data) {
 
   if (duplicate) {
     const error = new Error(
-      'A booking already exists for this customer, activity, date and time'
+      'A booking already exists for this customer, product, date and time'
     );
 
     error.status = 409;
@@ -121,7 +158,7 @@ export function createNewBooking(data) {
     // ------------------------------------------
 
     const bookedGuests = getBookedGuests(
-      activitySlug,
+      scope,
       data.date,
       time
     );
@@ -152,8 +189,8 @@ export function createNewBooking(data) {
     // Calculate price from DB
     // ------------------------------------------
 
-    const pricing = calculateActivityPrice(
-      activity,
+    const pricing = calculateBookingPrice(
+      source,
       guests
     );
 
@@ -166,8 +203,8 @@ const accessCode = generateAccessCode();
 const bookingId = createBooking({
   booking_reference: bookingReference,
   access_code: accessCode,
-      activity_slug: activitySlug,
-      pack_slug: null,
+      activity_slug: activitySlug || null,
+      pack_slug: packSlug || null,
       customer_name: data.customer_name.trim(),
       email,
       phone: data.phone.trim(),
@@ -312,8 +349,13 @@ export function rescheduleAdminBooking(id, data) {
   }
 
   // Check duplicate booking
+  const scope = {
+    activitySlug: booking.activity_slug,
+    packSlug: booking.pack_slug,
+  };
+
   const duplicate = findDuplicateBooking(
-    booking.activity_slug,
+    scope,
     booking.email,
     date,
     time
@@ -335,7 +377,7 @@ export function rescheduleAdminBooking(id, data) {
 
   // Check capacity
   const bookedGuests = getBookedGuests(
-    booking.activity_slug,
+    scope,
     date,
     time
   );
@@ -385,6 +427,30 @@ export function getAdminBookingDetails(id) {
 
   return booking;
 }
+
+/**
+ * The guest-facing shape of a booking. The plain row is returned because the
+ * guest has just proved they hold the access code, so echoing it back
+ * discloses nothing they do not already have — and it is what lets a guest
+ * who bookmarked /ticket reopen the same scannable QR months later.
+ *
+ * The QR itself is rendered on the server so the encoder never ships to the
+ * browser; buildScanPayload rejects anything without a valid pair, so an
+ * admin-shaped booking simply gets a null here instead of throwing.
+ */
+export async function toGuestTicket(booking) {
+  if (!booking) {
+    return null;
+  }
+
+  const { renderQrDataUrl } = await import('../qr/render.js');
+
+  return {
+    ...booking,
+    qr_code: await renderQrDataUrl(booking),
+  };
+}
+
 export function getBookingByGuestAccess(
   bookingReference,
   accessCode

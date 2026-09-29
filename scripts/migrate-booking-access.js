@@ -1,8 +1,8 @@
-const crypto = require('crypto');
-const { DatabaseSync } = require('node:sqlite');
-const path = require('path');
+import crypto from 'node:crypto';
+import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 
-const databasePath = path.join(
+const databasePath = join(
   process.cwd(),
   'data',
   'visitmlaline.sqlite'

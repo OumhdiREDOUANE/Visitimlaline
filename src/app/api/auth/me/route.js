@@ -1,8 +1,10 @@
+import { logger } from '@/lib/observability/logger';
+import { logRequest } from '@/lib/observability/route';
 import {
   getAuthenticatedUser,
 } from '@/lib/auth';
 
-export async function GET(request) {
+async function handleGET(request) {
   try {
     const user =
       getAuthenticatedUser(request);
@@ -31,7 +33,7 @@ export async function GET(request) {
       }
     );
   } catch (error) {
-    console.error(
+    logger.error(
       'GET /api/auth/me error:',
       error
     );
@@ -47,3 +49,5 @@ export async function GET(request) {
     );
   }
 }
+
+export const GET = logRequest(handleGET, 'GET /api/auth/me');

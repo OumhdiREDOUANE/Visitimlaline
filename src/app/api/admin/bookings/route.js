@@ -1,7 +1,11 @@
+import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
-import { getAdminBookings } from '@/lib/services/booking.service';
+import {
+  getAdminBookings,
+  toAdminBooking,
+} from '@/lib/services/booking.service';
 
-export async function GET(request) {
+async function handleGET(request) {
   try {
     requireRole(request, ['admin', 'staff']);
 
@@ -9,20 +13,21 @@ export async function GET(request) {
 
     const status = searchParams.get('status');
     const activity = searchParams.get('activity');
+    const pack = searchParams.get('pack');
 
-    const bookings = getAdminBookings({
+    const filters = {
       status: status || null,
       activity: activity || null,
-    });
+      pack: pack || null,
+    };
+
+    const bookings = getAdminBookings(filters);
 
     return Response.json(
       {
         success: true,
-        filters: {
-          status: status || null,
-          activity: activity || null,
-        },
-        data: bookings,
+        filters,
+        data: bookings.map(toAdminBooking),
       },
       {
         status: 200,
@@ -45,3 +50,5 @@ export async function GET(request) {
     );
   }
 }
+
+export const GET = logRequest(handleGET, 'GET /api/admin/bookings');

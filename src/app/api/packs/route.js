@@ -1,6 +1,7 @@
+import { logRequest } from '@/lib/observability/route';
 import { getPacks } from '@/lib/services/pack.service';
 
-export async function GET() {
+async function handleGET() {
   try {
     const packs = getPacks();
 
@@ -27,3 +28,5 @@ export async function GET() {
     );
   }
 }
+
+export const GET = logRequest(handleGET, 'GET /api/packs');

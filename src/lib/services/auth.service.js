@@ -1,17 +1,17 @@
 import {
   findUserByEmail,
   findUserById,
-} from '../db/users';
+} from '../db/users.js';
 
 import {
   verifyPassword,
-} from '../auth/password';
+} from '../auth/password.js';
 
 import {
   createUserSession,
   getSessionFromToken,
   deleteUserSession,
-} from '../auth/session';
+} from '../auth/session.js';
 
 export function loginUser(email, password) {
   const normalizedEmail =

@@ -1,10 +1,11 @@
+import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
 
 import {
   markAdminNotificationAsUnread,
 } from '@/lib/services/notification.service';
 
-export async function PATCH(request, { params }) {
+async function handlePATCH(request, { params }) {
   try {
     requireRole(request, ['admin']);
 
@@ -61,3 +62,5 @@ export async function PATCH(request, { params }) {
     );
   }
 }
+
+export const PATCH = logRequest(handlePATCH, 'PATCH /api/admin/notifications/{id}/unread');

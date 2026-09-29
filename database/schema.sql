@@ -157,3 +157,6 @@ CREATE INDEX IF NOT EXISTS idx_sessions_expires
     ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_bookings_reference
     ON bookings(booking_reference);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_access_code
+    ON bookings(access_code);

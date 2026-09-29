@@ -1,22 +1,27 @@
 // scripts/init-db.js
-const fs = require('fs');
-const path = require('path');
-const { DatabaseSync } = require('node:sqlite');
+import { mkdirSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 
-const root = process.cwd();
+const databasePath = join(
+  process.cwd(),
+  'data',
+  'visitmlaline.sqlite'
+);
 
-const databasePath = path.join(root, 'data', 'visitmlaline.sqlite');
-const schemaPath = path.join(root, 'database', 'schema.sql');
+const schemaPath = join(
+  process.cwd(),
+  'database',
+  'schema.sql'
+);
 
-fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+mkdirSync(dirname(databasePath), { recursive: true });
 
 const db = new DatabaseSync(databasePath);
 
-const schema = fs.readFileSync(schemaPath, 'utf8');
+db.exec(readFileSync(schemaPath, 'utf8'));
 
-db.exec(schema);
+db.close();
 
 console.log('Database created successfully.');
 console.log(`Database: ${databasePath}`);
-
-db.close();

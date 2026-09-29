@@ -5,17 +5,22 @@ import {
   getReadNotifications,
   markNotificationAsRead,
   markNotificationAsUnread,
-} from '../db/notifications';
+} from '../db/notifications.js';
 
-import { sendTelegramMessage } from './telegram.service';
+import { logger } from '../observability/logger.js';
+import { sendTelegramMessage } from './telegram.service.js';
 
 export async function createArrivalNotification(booking) {
+ const product = booking.activity_slug
+   ? `Activity: ${booking.activity_slug}`
+   : `Pack: ${booking.pack_slug}`;
+
  const message = `
 🔔 New Arrival
 
 Booking: #${booking.id}
 Customer: ${booking.customer_name}
-Activity: ${booking.activity_slug}
+${product}
 Date: ${booking.date}
 Time: ${booking.time}
 Guests: ${booking.guests}
@@ -31,10 +36,11 @@ Status: ${booking.status}
   try {
     await sendTelegramMessage(message);
   } catch (error) {
-    console.error(
-      'Failed to send Telegram notification:',
-      error.message
-    );
+    logger.warn('telegram.notification_failed', {
+      notificationId,
+      bookingId: booking.id,
+      error: error.message,
+    });
   }
 
   return notificationId;

@@ -1,6 +1,7 @@
+import { logRequest } from '@/lib/observability/route';
 import { getActivity } from '@/lib/services/activity.service';
 
-export async function GET(request, { params }) {
+async function handleGET(request, { params }) {
   try {
     const { slug } = await params;
 
@@ -53,3 +54,5 @@ export async function GET(request, { params }) {
     );
   }
 }
+
+export const GET = logRequest(handleGET, 'GET /api/activities/{slug}');

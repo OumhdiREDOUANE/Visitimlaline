@@ -206,6 +206,8 @@ INSERT OR IGNORE INTO packs (
 -- ============================================
 
 INSERT INTO bookings (
+    booking_reference,
+    access_code,
     activity_slug,
     pack_slug,
     customer_name,
@@ -220,6 +222,8 @@ INSERT INTO bookings (
     status
 ) VALUES
 (
+    'BK-4A1B2C3D',
+    'QUAD-2A3B-4C5D',
     'quad-adventure',
     NULL,
     'John Demo',
@@ -234,6 +238,8 @@ INSERT INTO bookings (
     'NOT PAID YET'
 ),
 (
+    'BK-5E6F7A8B',
+    'SUNS-2J3K-4L5M',
     'sunset-experience',
     NULL,
     'Sarah Demo',
@@ -248,6 +254,8 @@ INSERT INTO bookings (
     'NOT PAID YET'
 ),
 (
+    'BK-9C0D1E2F',
+    'CAVE-6E7F-8G9H',
     'cave-discovery',
     NULL,
     'Alex Demo',

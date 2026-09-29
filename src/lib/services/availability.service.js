@@ -1,4 +1,4 @@
-import { getBookedGuests } from '../db/bookings';
+import { getBookedGuests } from '../db/bookings.js';
 
 export const SLOTS = [
   '10:00',
@@ -9,10 +9,10 @@ export const SLOTS = [
 
 export const CAPACITY_PER_SLOT = 8;
 
-export function getAvailability(activitySlug, date) {
+function buildSlots(scope, date) {
   return SLOTS.map((time) => {
     const bookedGuests = getBookedGuests(
-      activitySlug,
+      scope,
       date,
       time
     );
@@ -30,4 +30,24 @@ export function getAvailability(activitySlug, date) {
       available: remainingGuests > 0,
     };
   });
+}
+
+export function getActivityAvailability(
+  activitySlug,
+  date
+) {
+  return buildSlots(
+    { activitySlug, packSlug: null },
+    date
+  );
+}
+
+export function getPackAvailability(
+  packSlug,
+  date
+) {
+  return buildSlots(
+    { activitySlug: null, packSlug },
+    date
+  );
 }

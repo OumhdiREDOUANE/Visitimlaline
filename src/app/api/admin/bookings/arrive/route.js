@@ -1,13 +1,15 @@
+import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
-import {  markBookingArrivedByAccess } from '@/lib/services/booking.service';
+import {
+  markBookingArrivedByAccess,
+  toAdminBooking,
+} from '@/lib/services/booking.service';
 
-export async function POST(request) {
+async function handlePOST(request) {
   try {
-    const user = requireRole(request, ['admin', 'staff']);
+    requireRole(request, ['admin', 'staff']);
 
-   const body = await request.json();
-
-  
+    const body = await request.json();
 
     const booking =
       await markBookingArrivedByAccess(
@@ -15,11 +17,10 @@ export async function POST(request) {
         body.access_code
       );
 
-
     return Response.json(
       {
         success: true,
-        data: booking,
+        data: toAdminBooking(booking),
       },
       { status: 200 }
     );
@@ -38,3 +39,8 @@ export async function POST(request) {
     );
   }
 }
+
+export const POST = logRequest(
+  handlePOST,
+  'POST /api/admin/bookings/arrive'
+);

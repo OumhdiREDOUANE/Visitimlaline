@@ -1,7 +1,7 @@
 import {
   getAllActivities,
   getActivityBySlug,
-} from '../db/activities';
+} from '../db/activities.js';
 
 function parseJsonField(value, fallback = []) {
   if (!value) {

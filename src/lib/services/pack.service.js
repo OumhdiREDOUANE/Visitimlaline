@@ -1,4 +1,4 @@
-import { getAllPacks } from '../db/packs';
+import { getAllPacks } from '../db/packs.js';
 
 function parseJsonField(value, fallback = []) {
   if (!value) {

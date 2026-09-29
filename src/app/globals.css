@@ -1,26 +1,318 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /*
+   * Palette measured pixel by pixel from the supplied design frame
+   * (917x427 screenshot): cream page, deep warm brown ink, brown mid
+   * tones and a sunset orange/amber accent family. Every value below is
+   * a colour read out of that image, with one exception: --color-muted
+   * is the measured #776058 darkened one step so secondary text also
+   * passes AA on the 5% ink / 10% terra tints it sits on. --color-surface
+   * is the only derived colour (the cream lifted a step for cards).
+   * Contrast on the cream page: ink 15.5:1, muted 5.3:1, accent 4.6:1,
+   * white on accent 5.6:1.
+   */
+  --color-ink: #260707;
+  --color-cream: #f3e8d4;
+  --color-surface: #fbf6ec;
+  --color-sand: #fbb65b;
+  --color-terra: #975838;
+  --color-terra-deep: #673717;
+  --color-gold: #f69749;
+  --color-forest: #482617;
+  --color-muted: #6f5b53;
+
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-sans: var(--font-geist-sans), Arial, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /*
+     * The wavy section divider, cut from the wiggle drawing the owner
+     * supplied. A mask only reads alpha, so the tile's white fill never
+     * shows: the fringe takes its colour from --wave-color, which is why
+     * the same tile serves the ink, forest and terra bands.
+     *
+     * --wave-depth is how far the fringe reaches across the boundary. The
+     * strip is sized to the tile's 29.9:15 ratio rather than stretched, so
+     * changing the depth thickens the wave without distorting it.
+     */
+    --wave-mask: url('/wave-wiggle.svg');
+
+    /*
+     * The same tile on its side, for the bands that run down a card. A mask
+     * image cannot be turned in CSS — turning the element that carries it means
+     * giving that element a length, and a side band's length is the card's
+     * height, which no percentage can name. The turn lives in the asset for that
+     * reason; public/wave-wiggle-side.svg holds the owner's path unchanged.
+     */
+    --wave-mask-side: url('/wave-wiggle-side.svg');
+    --wave-depth: 28px;
+    --wave-color: var(--color-terra);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+  }
+
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-terra);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  /*
+   * Amber is unreadable on the cream page and deep brown is unreadable on
+   * the dark sections, so the tone is inherited: light surfaces fall back
+   * to terracotta-deep (9.1:1) and `.on-dark` ancestors flip it to sand
+   * (10.7:1 on ink, 7.4:1 on the brown section).
+   */
+  color: var(--eyebrow-color, var(--color-terra-deep));
+}
+
+@utility on-dark {
+  --eyebrow-color: var(--color-sand);
+}
+
+@utility page-shell {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 5vw;
+}
+
+/*
+ * Wavy section dividers, the two halves of the reference stylesheet's
+ * `.border-img-bottom` / `.border-img-top` pair.
+ *
+ *   .wave-edge        the above block's colour drips into the NEXT section
+ *   .wave-edge-above  the below block's colour rises into the PREVIOUS one
+ *
+ * Both draw on one `::after`, so the two directions cannot drift apart. The
+ * strip is taken out of the flow and `pointer-events: none` keeps it off the
+ * content it overlaps, so nothing shifts and nothing becomes unclickable.
+ *
+ * `height: 0` is the load-bearing part. The class marks a boundary and is
+ * meant to sit on an empty element *between* two sections — see WaveEdge.js.
+ * An image node anywhere inside a subtree makes axe-core's `color-contrast`
+ * rule drop that whole subtree to `incomplete` — unmeasured, not passing — and
+ * a mask is only one of the three ways to put one there: a plain painted
+ * pseudo element and a tiled `background-image` do it too. So this is a
+ * placement rule, not a `mask-image` rule. Verified by falsification: with the
+ * fringe on the footer a 1.56:1 pair went unflagged at a11y 100; with it
+ * removed the same pair dropped to 96. PROJECT_MAP.md §3.3 has the four-way
+ * table that separated the mechanism from the symptom.
+ */
+.wave-edge,
+.wave-edge-above {
+  position: relative;
+  height: 0;
+}
+
+.wave-edge::after,
+.wave-edge-above::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--wave-depth);
+  pointer-events: none;
+  background-color: var(--wave-color);
+  mask-image: var(--wave-mask);
+  mask-repeat: repeat-x;
+  mask-size: auto 100%;
+  mask-position: 0 0;
+}
+
+/* Dripping downward. The tile is flipped so its solid half meets the block
+   above and the wave is the part that dissolves into the next section. */
+.wave-edge::after {
+  top: 100%;
+  bottom: auto;
+  transform: scaleY(-1);
+}
+
+/* Rising upward. Unflipped, so the tile's solid half is the end that touches
+   the block below and the crest is the part that reaches into the one above. */
+.wave-edge-above::after {
+  top: auto;
+  bottom: 100%;
+  transform: none;
+}
+
+/*
+ * Down a side. This host is not a zero-height boundary marker — it is a slot
+ * the card hands it, one depth wide and as tall as the card — and the strip
+ * fills that slot rather than declaring a length. That is the whole point of
+ * putting the quarter turn in the asset: a turned element would need a length
+ * equal to the card's height, and no percentage can name an ancestor's height.
+ *
+ * `mask-size: 100% auto` on a one-depth-wide box gives a tile of the same
+ * 29.9:15 ratio the horizontal bands use, so the wave has the same period and
+ * the same proportions down a side as it does across a top.
+ */
+.wave-edge-side {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.wave-edge-side::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--wave-color);
+  mask-image: var(--wave-mask-side);
+  mask-repeat: repeat-y;
+  mask-size: 100% auto;
+  mask-position: 0 0;
+}
+
+/*
+ * The card that wears the wave. The wrapper, not the card, is the grid item,
+ * and it holds the band the fringe hangs in — the strip is out of flow, so the
+ * card needs no bottom padding and nothing of the card's own is ever covered.
+ * That is the whole reason the wave sits here and not inside the card: at
+ * --wave-depth, a band drawn over the card's own padding covered the experience
+ * card's price and 7.2px of its 16px "Voir le détail" line, and 3.2px of the
+ * booking wizard's "Confirmer la réservation" button.
+ *
+ * The band is the wave's, not the grid's. The listing grids gap by 24px, and 28px
+ * of wave would otherwise reach into the next row.
+ *
+ * `display: flex` is what keeps the cards in a row the same height, now that the
+ * wrapper is the grid item and the card is the thing that flexes to fill it.
+ *
+ * No band here carries a z-index. Every one of them lives in the wrapper's own
+ * padding, so none can reach the card; a stacking order would only hide a future
+ * geometry mistake behind a paint order.
+ */
+.card-wave {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: var(--wave-depth);
+}
+
+/*
+ * The four-sided frame, `wave="frame"`: one band of space on every side instead
+ * of one below, so the top and side strips have somewhere to live that is not
+ * the card. The corners close because the top and bottom bands span the wrapper's
+ * full width while the side bands are inset by a depth at both ends.
+ *
+ * It costs 56px of the grid cell, so a card is that much narrower and the grids'
+ * 24px gap reads as 80px. That is the price of a frame drawn outside the card
+ * rather than over it, and it is why this is opt-in per card and not the default.
+ */
+.card-wave-frame {
+  padding: var(--wave-depth);
+}
+
+/* =========================
+   TOP
+   ========================= */
+
+.card-wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   BOTTOM
+   ========================= */
+
+.card-wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   LEFT
+   ========================= */
+
+.card-wave-left {
+  position: absolute;
+  top: var(--wave-depth);
+  bottom: var(--wave-depth);
+  left: 0;
+  width: var(--wave-depth);
+  pointer-events: none;
+}
+
+/* =========================
+   RIGHT
+   ========================= */
+
+/* Mirrored so the crests face the card on both sides: the tile's turn points
+   them right, which is the way they have to point on the left band. */
+.card-wave-right {
+  position: absolute;
+  top: var(--wave-depth);
+  bottom: var(--wave-depth);
+  right: 0;
+  width: var(--wave-depth);
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .wave-edge::after,
+  .wave-edge-above::after,
+  .wave-edge-side::after {
+    display: none;
+  }
+
+  /* A waved card gave its straight border up to the wave, and the wave is
+     hidden above, so print needs an edge back. The card is the wrapper's first
+     child by construction — Card.js renders it before the strip. */
+  .card-wave > :first-child {
+    border: 1px solid #ddd !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .print-area {
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+  }
 }

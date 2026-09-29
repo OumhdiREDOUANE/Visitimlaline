@@ -1,10 +1,12 @@
+import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
 
 import {
   getAdminBookingDetails,
+  toAdminBooking,
 } from '@/lib/services/booking.service';
 
-export async function GET(request, { params }) {
+async function handleGET(request, { params }) {
   try {
     requireRole(request, ['admin', 'staff']);
 
@@ -25,7 +27,7 @@ export async function GET(request, { params }) {
     return Response.json(
       {
         success: true,
-        data: booking,
+        data: toAdminBooking(booking),
       },
       { status: 200 }
     );
@@ -44,3 +46,5 @@ export async function GET(request, { params }) {
     );
   }
 }
+
+export const GET = logRequest(handleGET, 'GET /api/admin/bookings/{id}');

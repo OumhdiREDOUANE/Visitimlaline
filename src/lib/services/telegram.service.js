@@ -1,3 +1,5 @@
+import { logger } from '../observability/logger.js';
+
 const TELEGRAM_API = 'https://api.telegram.org';
 
 export async function sendTelegramMessage(message) {
@@ -27,6 +29,11 @@ export async function sendTelegramMessage(message) {
   if (!response.ok || !data.ok) {
     throw new Error(data.description || 'Telegram API error');
   }
+
+  logger.debug('telegram.sent', {
+    chatId,
+    length: message.length,
+  });
 
   return data;
 }

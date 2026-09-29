@@ -5,7 +5,7 @@ import {
   findSessionByTokenHash,
   updateSessionLastUsed,
   deleteSessionByTokenHash,
-} from '../db/sessions';
+} from '../db/sessions.js';
 
 const SESSION_DURATION_DAYS = 7;
 

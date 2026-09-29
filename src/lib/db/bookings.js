@@ -1,34 +1,47 @@
-import { db } from './index';
+import { db } from './index.js';
 
-export function getBookedGuests(activitySlug, date, time) {
+/**
+ * A booking targets exactly one product: either an activity or a pack.
+ * `scope` is `{ activitySlug, packSlug }` with the unused side set to null.
+ */
+function scopeClause(scope) {
+  if (scope?.packSlug) {
+    return { column: 'pack_slug', value: scope.packSlug };
+  }
+
+  return { column: 'activity_slug', value: scope?.activitySlug ?? null };
+}
+
+export function getBookedGuests(scope, date, time) {
+  const { column, value } = scopeClause(scope);
+
   const statement = db.prepare(`
     SELECT COALESCE(SUM(guests), 0) AS booked_guests
     FROM bookings
-    WHERE activity_slug = ?
+    WHERE ${column} = ?
       AND date = ?
       AND time = ?
       AND status != 'CANCELLED'
   `);
 
-  const result = statement.get(
-    activitySlug,
-    date,
-    time
-  );
+  const result = statement.get(value, date, time);
 
   return Number(result.booked_guests || 0);
 }
 
 export function findDuplicateBooking(
-  activitySlug,
+  scope,
   email,
   date,
   time
 ) {
+  const { column, value } = scopeClause(scope);
+
   const statement = db.prepare(`
     SELECT
       id,
       activity_slug,
+      pack_slug,
       customer_name,
       email,
       date,
@@ -37,7 +50,7 @@ export function findDuplicateBooking(
       total_price,
       status
     FROM bookings
-    WHERE activity_slug = ?
+    WHERE ${column} = ?
       AND email = ?
       AND date = ?
       AND time = ?
@@ -45,12 +58,7 @@ export function findDuplicateBooking(
     LIMIT 1
   `);
 
-  return statement.get(
-    activitySlug,
-    email,
-    date,
-    time
-  );
+  return statement.get(value, email, date, time);
 }
 
 export function createBooking(data) {
@@ -71,7 +79,7 @@ export function createBooking(data) {
       total_price,
       status
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const result = statement.run(
@@ -138,6 +146,7 @@ export function markBookingAsArrived(id) {
 export function getAllBookings({
   status = null,
   activity = null,
+  pack = null,
 } = {}) {
   let query = `
     SELECT
@@ -172,6 +181,11 @@ export function getAllBookings({
   if (activity) {
     conditions.push(`activity_slug = ?`);
     params.push(activity);
+  }
+
+  if (pack) {
+    conditions.push(`pack_slug = ?`);
+    params.push(pack);
   }
 
   if (conditions.length > 0) {
@@ -221,7 +235,7 @@ export function getBookingByAccess(
     SELECT
       id,
       booking_reference,
-     
+      access_code,
       activity_slug,
       pack_slug,
       customer_name,

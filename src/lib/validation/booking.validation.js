@@ -10,8 +10,18 @@ export function validateBooking(data) {
     };
   }
 
-  if (!data.activity_slug || typeof data.activity_slug !== 'string') {
-    errors.activity_slug = 'Activity is required';
+  const activitySlug = readSlug(data.activity_slug);
+  const packSlug = readSlug(data.pack_slug);
+
+  if (!activitySlug && !packSlug) {
+    errors.activity_slug =
+      'An activity or a pack is required';
+  } else if (activitySlug && packSlug) {
+    const message =
+      'Choose either an activity or a pack, not both';
+
+    errors.activity_slug = message;
+    errors.pack_slug = message;
   }
 
   if (!data.customer_name || typeof data.customer_name !== 'string') {
@@ -54,4 +64,10 @@ export function validateBooking(data) {
     valid: Object.keys(errors).length === 0,
     errors,
   };
+}
+
+function readSlug(value) {
+  return typeof value === 'string'
+    ? value.trim()
+    : '';
 }
