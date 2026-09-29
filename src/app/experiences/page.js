@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchActivities } from '@/lib/frontend/api';
+import WavyImageFrame from '@/components/ui/WavyImageFrame';
 
 export default function ExperiencesPage() {
   const [activities, setActivities] = useState([]);
@@ -68,14 +68,11 @@ export default function ExperiencesPage() {
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredActivities.map((activity) => (
             <article key={activity.slug} className="overflow-hidden rounded-[28px] border border-[#D9B98C]/40 bg-[#F5EFE5] shadow-[0_20px_60px_rgba(23,19,15,0.05)]">
-              <div className="relative h-72 overflow-hidden">
-                <Image
-                  src={activity.hero || activity.gallery?.[0] || 'https://images.unsplash.com/photo-1558981806-ec527fa84c39'}
-                  alt={activity.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              <WavyImageFrame
+                src={activity.hero || activity.gallery?.[0] || 'https://images.unsplash.com/photo-1558981806-ec527fa84c39'}
+                alt={activity.title}
+                className="h-72"
+              />
               <div className="p-5">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="rounded-full border border-[#D9B98C] bg-[#D9B98C]/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-[#17130F]">{activity.category}</span>
