@@ -8,10 +8,10 @@ export default async function PacksPage() {
   const packs = getPacks();
 
   return (
-    <div className="page-shell flex flex-col gap-10 py-12">
+    <div className="page-shell flex flex-col gap-10 py-16 sm:py-20">
       <header className="flex flex-col gap-4">
         <p className="eyebrow">{t('packs.eyebrow')}</p>
-        <h1 className="max-w-2xl text-5xl">
+        <h1 className="max-w-2xl text-5xl sm:text-6xl">
           {t('packs.title')}
         </h1>
         <p className="max-w-2xl text-muted">

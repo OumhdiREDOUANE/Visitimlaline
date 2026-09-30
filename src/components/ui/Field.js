@@ -1,10 +1,10 @@
 const base =
-  'block w-full border bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:outline-none';
+  'block w-full min-h-[52px] rounded-2xl border bg-surface bg-white px-4 py-3 text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-terra/15';
 
 const control = (error) =>
   error
     ? 'border-terra focus:border-terra'
-    : 'border-ink/20 focus:border-terra';
+    : 'border-ink/20 focus:border-terra border-sand';
 
 export function Field({
   label,
@@ -16,9 +16,9 @@ export function Field({
   return (
     <label
       htmlFor={htmlFor}
-      className="flex flex-col gap-1.5"
+      className="flex flex-col gap-2"
     >
-      <span className="text-xs font-bold uppercase tracking-[0.12em] text-muted">
+      <span className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-muted">
         {label}
       </span>
       {children}

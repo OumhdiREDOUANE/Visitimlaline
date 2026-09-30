@@ -28,12 +28,12 @@ export default async function BackofficeLayout({
 
   return (
     <div className="flex min-h-full flex-col bg-cream">
-      <header className="no-print border-b border-cream/15 bg-ink text-cream">
+      <header className="no-print border-b border-cream/15 bg-ink text-cream shadow-[0_12px_40px_rgb(42_33_26_/_12%)]">
         <div className="page-shell flex flex-wrap items-center justify-between gap-4 py-4">
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="font-display text-lg"
+              className="font-display text-lg font-semibold uppercase tracking-[0.22em]"
             >
               Visitimlaline
             </Link>
@@ -43,7 +43,7 @@ export default async function BackofficeLayout({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="font-semibold text-cream/80 hover:text-cream"
+                  className="text-xs font-semibold uppercase tracking-[0.14em] text-cream/80 transition-colors hover:text-sand"
                 >
                   {t(link.key)}
                 </Link>

@@ -29,16 +29,15 @@ export function ActivityCard({
   return (
     <>
 <Card
-  wave="frame"
   className="flex h-full flex-col overflow-hidden"
 >
-      <div className="relative aspect-[16/10] w-full">
+      <div className="experience-image-frame relative aspect-[16/10] w-full overflow-hidden rounded-[22px]">
         <Image
           src={activity.hero}
           alt={activity.title}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover"
+          className="experience-card-image object-cover"
         />
 
         {/* Duration rides on the photo: it is the question people ask

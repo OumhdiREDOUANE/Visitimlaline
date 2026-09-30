@@ -15,10 +15,10 @@ export default async function BookingPage({
   const slug = (params?.slug ?? '').toString();
 
   return (
-    <div className="page-shell flex flex-col gap-8 py-12">
+    <div className="page-shell flex flex-col gap-8 py-16 sm:py-20">
       <header className="flex flex-col gap-3">
         <p className="eyebrow">{t('booking.eyebrow')}</p>
-        <h1 className="max-w-2xl text-5xl">
+        <h1 className="max-w-2xl text-5xl sm:text-6xl">
           {t('booking.title')}
         </h1>
       </header>

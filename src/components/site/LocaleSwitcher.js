@@ -22,7 +22,7 @@ export function LocaleSwitcher({ tone = 'dark' }) {
       onClick={switchTo}
       title={t('nav.language')}
       aria-label={`${t('nav.language')}: ${LOCALE_LABELS[target]}`}
-      className={`rounded-full border px-3 py-1 text-xs font-bold tracking-wide uppercase transition-colors ${
+      className={`rounded-full border px-3 py-1.5 text-[0.6875rem] font-bold tracking-[0.14em] uppercase transition-colors ${
         tone === 'light'
           ? 'border-ink/20 text-ink hover:border-terra hover:text-terra'
           : 'border-cream/40 text-cream hover:border-cream hover:bg-cream/10'

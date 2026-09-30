@@ -1,4 +1,4 @@
-import { Geist } from 'next/font/google';
+import { Manrope, Sora } from 'next/font/google';
 
 import './globals.css';
 
@@ -9,8 +9,13 @@ import {
 import { createTranslator } from '@/lib/i18n/translate.js';
 import { LocaleProvider } from '@/components/providers/LocaleProvider.js';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const manrope = Manrope({
+  variable: '--font-manrope',
+  subsets: ['latin'],
+});
+
+const sora = Sora({
+  variable: '--font-sora',
   subsets: ['latin'],
 });
 
@@ -33,7 +38,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} h-full antialiased`}
+      className={`${manrope.variable} ${sora.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <LocaleProvider

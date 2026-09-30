@@ -1,9 +1,9 @@
 export function Footer({ t }) {
   return (
-    <footer className="no-print bg-ink py-12 text-cream">
+    <footer className="no-print bg-ink py-16 text-cream">
       <div className="page-shell flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-display text-2xl">
+          <p className="font-display text-2xl font-semibold uppercase tracking-[0.2em]">
             Visitimlaline
           </p>
           <p className="mt-2 text-sm text-cream/70">

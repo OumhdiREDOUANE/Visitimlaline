@@ -26,7 +26,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="on-dark relative isolate flex min-h-[75vh] items-center overflow-hidden bg-ink text-cream">
+      <section className="on-dark relative isolate flex min-h-[760px] items-center overflow-hidden bg-ink text-cream">
         {hero ? (
           <Image
             src={hero.hero}
@@ -55,7 +55,7 @@ export default async function HomePage() {
         <div className="page-shell flex w-full flex-col gap-6 py-20 sm:py-24">
           <p className="eyebrow">{t('home.eyebrow')}</p>
 
-          <h1 className="max-w-3xl text-5xl sm:text-6xl">
+          <h1 className="max-w-4xl text-5xl sm:text-6xl lg:text-7xl">
             {t('home.title')}
           </h1>
 
@@ -103,7 +103,6 @@ export default async function HomePage() {
             />
 
             {categories.map((category) => (
-              <>
               <CategoryPill
                 key={category}
                 href={`/experiences?category=${category}`}
@@ -113,7 +112,6 @@ export default async function HomePage() {
                   category
                 )}
               />
-              </>
             ))}
           </div>
         </div>
@@ -149,7 +147,7 @@ export default async function HomePage() {
       </section>
 
       <section className="on-dark bg-forest text-cream">
-        <div className="page-shell grid gap-10 py-16 sm:grid-cols-2 sm:items-center">
+        <div className="page-shell grid gap-10 py-20 sm:grid-cols-2 sm:items-center">
           <div className="flex flex-col gap-5">
             <p className="eyebrow">{t('home.storyEyebrow')}</p>
             <h2 className="text-4xl">
@@ -175,7 +173,7 @@ export default async function HomePage() {
             ].map((value, index) => (
               <div
                 key={index}
-                className="border border-cream/15 bg-ink/10 px-4 py-8"
+                className="rounded-2xl border border-cream/15 bg-ink/10 px-4 py-8"
               >
                 <p className="font-display text-4xl">
                   {value}

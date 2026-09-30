@@ -16,10 +16,10 @@ export function CategoryPill({
       aria-current={
         active ? 'true' : undefined
       }
-      className={`rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
+      className={`rounded-full border px-4 py-2 text-[0.6875rem] font-bold uppercase tracking-[0.16em] transition-all ${
         active
           ? 'border-terra bg-terra text-white'
-          : 'border-ink/15 text-ink hover:border-ink/40'
+          : 'border-sand text-ink hover:border-terra hover:text-terra'
       }`}
     >
       {label}

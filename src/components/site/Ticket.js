@@ -66,7 +66,7 @@ export function Ticket({
       </div>
 
       {booking.access_code ? (
-        <div className="flex flex-wrap items-center justify-between gap-4 border border-ink/10 bg-ink/5 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-sand/30 bg-ink/5 px-5 py-4">
           <div>
             <p className="text-xs uppercase tracking-[0.14em] text-muted">
               {t('ticket.code')}

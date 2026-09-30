@@ -12,18 +12,18 @@
    * Contrast on the cream page: ink 15.5:1, muted 5.3:1, accent 4.6:1,
    * white on accent 5.6:1.
    */
-  --color-ink: #260707;
-  --color-cream: #f3e8d4;
-  --color-surface: #fbf6ec;
-  --color-sand: #fbb65b;
-  --color-terra: #975838;
-  --color-terra-deep: #673717;
-  --color-gold: #f69749;
-  --color-forest: #482617;
-  --color-muted: #6f5b53;
+  --color-ink: #2a211a;
+  --color-cream: #f5efe5;
+  --color-surface: #ffffff;
+  --color-sand: #d9b98c;
+  --color-terra: #b85f32;
+  --color-terra-deep: #9d4d26;
+  --color-gold: #d89545;
+  --color-forest: #2a211a;
+  --color-muted: #756b60;
 
-  --font-display: Georgia, 'Times New Roman', serif;
-  --font-sans: var(--font-geist-sans), Arial, sans-serif;
+  --font-display: var(--font-sora), Arial, sans-serif;
+  --font-sans: var(--font-manrope), Arial, sans-serif;
 }
 
 @layer base {
@@ -48,6 +48,7 @@
      * reason; public/wave-wiggle-side.svg holds the owner's path unchanged.
      */
     --wave-mask-side: url('/wave-wiggle-side.svg');
+    --experience-image-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 140'%3E%3Cpath fill='black' d='M 20 10 C 30 5, 40 15, 50 10 C 60 5, 70 15, 80 10 C 90 5, 100 15, 110 10 C 120 5, 130 15, 140 10 C 150 5, 160 15, 170 10 C 180 5, 190 15, 190 20 C 195 30, 185 40, 190 50 C 195 60, 185 70, 190 80 C 195 90, 185 100, 190 110 C 190 120, 180 135, 170 130 C 160 125, 150 135, 140 130 C 130 125, 120 135, 110 130 C 100 125, 90 135, 80 130 C 70 125, 60 135, 50 130 C 40 125, 30 135, 20 130 C 10 125, 10 115, 10 110 C 5 100, 15 90, 10 80 C 5 70, 15 60, 10 50 C 5 40, 15 30, 10 20 C 10 15, 10 15, 20 10 Z'/%3E%3C/svg%3E");
     --wave-depth: 28px;
     --wave-color: var(--color-terra);
   }
@@ -60,14 +61,21 @@
     background-color: var(--color-cream);
     color: var(--color-ink);
     font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
     -webkit-font-smoothing: antialiased;
   }
 
   h1,
-  h2 {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
-    line-height: 0.98;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
   }
 
   input,
@@ -103,7 +111,15 @@
   width: 100%;
   max-width: 80rem;
   margin-inline: auto;
-  padding-inline: 5vw;
+  padding-inline: 1rem;
+
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding-inline: 2rem;
+  }
 }
 
 /*
@@ -155,6 +171,40 @@
   top: 100%;
   bottom: auto;
   transform: scaleY(-1);
+}
+
+.experience-image-frame {
+  position: relative;
+  background-color: #3D2314; /* Color dyāl l-border al-bni */
+  
+  /* Zdna f-l-padding bach l-line al-bni ykbar w-ybān (Tqdar t-jarrab mābēn 4px w 7px) */
+  padding: 8px !important; 
+  box-sizing: border-box;
+
+  /* Mask 'alā l-frame al-khārijī */
+  mask-image: var(--experience-image-wave);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: var(--experience-image-wave);
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* Inner Image Container */
+.experience-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  object-fit: cover;
+
+  /* Nfs l-mask 'alā l-imāz bach tqaṭṭa' f-nfs l-mowja */
+  mask-image: var(--experience-image-wave);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: var(--experience-image-wave);
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+
 }
 
 /* Rising upward. Unflipped, so the tile's solid half is the end that touches

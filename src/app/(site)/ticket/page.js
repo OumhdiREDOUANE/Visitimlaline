@@ -15,10 +15,10 @@ export default async function TicketPage() {
   );
 
   return (
-    <div className="page-shell flex flex-col gap-8 py-12">
+    <div className="page-shell flex flex-col gap-8 py-16 sm:py-20">
       <header className="flex flex-col gap-3">
         <p className="eyebrow">{t('ticket.eyebrow')}</p>
-        <h1 className="max-w-2xl text-5xl">
+        <h1 className="max-w-2xl text-5xl sm:text-6xl">
           {t('ticket.title')}
         </h1>
         <p className="max-w-xl text-muted">
@@ -29,7 +29,7 @@ export default async function TicketPage() {
       <div className="grid gap-8 lg:grid-cols-[minmax(0,26rem)_1fr]">
         <TicketLookup products={products} />
 
-        <aside className="border border-ink/10 bg-ink/5 p-6">
+        <aside className="rounded-[28px] border border-sand/40 bg-ink/5 p-6 shadow-[0_20px_60px_rgba(42,33,26,0.05)]">
           <p className="text-sm font-bold">
             {t('ticket.newBooking')}
           </p>
