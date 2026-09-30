@@ -18,18 +18,18 @@ export function PackCard({
     <Card
       className="flex h-full flex-col overflow-hidden"
     >
-      <div className="relative aspect-[16/10] w-full">
+      <div className="experience-image-frame relative aspect-[16/10] w-full overflow-hidden rounded-[22px]">
         <Image
           src={pack.hero}
           alt={pack.title}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover"
+          className="experience-card-image object-cover"
         />
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <TitleTag className="text-xl">
+        <TitleTag className="inline-block rounded-xl bg-cream px-3 py-2 text-xl">
           {pack.title}
         </TitleTag>
 
@@ -59,7 +59,7 @@ export function PackCard({
         </ul>
 
         <div className="mt-auto flex items-end justify-between gap-3 pt-2">
-          <p className="text-sm text-muted">
+          <p className="inline-block rounded-xl bg-cream px-3 py-2 text-sm text-muted">
             {t('common.from')}{' '}
             <span className="text-base font-bold text-ink">
               {formatMoney(pack.price_from, locale)}

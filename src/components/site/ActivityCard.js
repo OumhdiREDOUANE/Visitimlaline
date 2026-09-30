@@ -74,7 +74,7 @@ export function ActivityCard({
         </ul>
 
         <div className="mt-auto flex items-end justify-between gap-3 pt-3">
-          <p className="text-sm text-muted">
+          <p className="inline-block rounded-xl bg-cream px-3 py-2 text-sm text-muted">
             {t('common.from')}{' '}
             <span className="text-base font-bold text-ink">
               {formatMoney(

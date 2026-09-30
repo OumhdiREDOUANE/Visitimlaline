@@ -146,6 +146,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <WaveEdge
+        above
+        tone="ink"
+      />
+
       <section className="on-dark bg-forest text-cream">
         <div className="page-shell grid gap-10 py-20 sm:grid-cols-2 sm:items-center">
           <div className="flex flex-col gap-5">

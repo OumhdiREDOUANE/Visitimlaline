@@ -235,7 +235,6 @@ export function BookingWizard({
       className="flex flex-col gap-8"
     >
       <Card
-        wave
         className="flex flex-col gap-5 p-6"
       >
         <fieldset className="flex flex-col gap-4">
@@ -346,7 +345,6 @@ export function BookingWizard({
       </Card>
 
       <Card
-        wave
         className="flex flex-col gap-4 p-6"
       >
         <p className="text-sm font-bold">
@@ -390,7 +388,6 @@ export function BookingWizard({
       </Card>
 
       <Card
-        wave
         className="flex flex-col gap-5 p-6"
       >
         <p className="text-sm font-bold">
@@ -452,7 +449,6 @@ export function BookingWizard({
       </Card>
 
       <Card
-        wave
         className="flex flex-col gap-4 p-6"
       >
         <p className="text-sm font-bold">

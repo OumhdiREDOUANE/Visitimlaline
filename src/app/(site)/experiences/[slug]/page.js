@@ -107,14 +107,14 @@ export default async function ActivityPage({
           </div>
         </div>
 
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
+        <div className="experience-image-frame relative aspect-[4/3] w-full overflow-hidden rounded-[22px]">
           <Image
             src={activity.hero}
             alt={activity.title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 45vw"
-            className="object-cover"
+            className="experience-card-image object-cover"
           />
         </div>
       </section>
@@ -167,14 +167,14 @@ export default async function ActivityPage({
             {activity.gallery.map((source) => (
               <div
                 key={source}
-                className="relative aspect-[4/3] overflow-hidden rounded-xl"
+                className="experience-image-frame relative aspect-[4/3] overflow-hidden rounded-[22px]"
               >
                 <Image
                   src={source}
                   alt={activity.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover"
+                  className="experience-card-image object-cover"
                 />
               </div>
             ))}
