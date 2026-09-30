@@ -178,7 +178,7 @@
   background-color: #3D2314; /* Color dyāl l-border al-bni */
   
   /* Zdna f-l-padding bach l-line al-bni ykbar w-ybān (Tqdar t-jarrab mābēn 4px w 7px) */
-  padding: 8px !important; 
+  padding: 10px !important;
   box-sizing: border-box;
 
   /* Mask 'alā l-frame al-khārijī */
@@ -192,8 +192,10 @@
 
 /* Inner Image Container */
 .experience-card-image {
-  width: 100% !important;
-  height: 100% !important;
+  position: absolute !important;
+  inset: 10px !important;
+  width: calc(100% - 20px) !important;
+  height: calc(100% - 20px) !important;
   display: block;
   object-fit: cover;
 

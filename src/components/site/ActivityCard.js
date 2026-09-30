@@ -1,11 +1,9 @@
 import Image from 'next/image';
 
 import { Card } from '@/components/ui/Card.js';
-import { Badge } from '@/components/ui/Badge.js';
 import { Button } from '@/components/ui/Button.js';
 
 import {
-  categoryKey,
   formatDurationRange,
   formatMoney,
 } from '@/lib/format.js';
@@ -40,25 +38,17 @@ export function ActivityCard({
           className="experience-card-image object-cover"
         />
 
-        {/* Duration rides on the photo: it is the question people ask
-            before they click, and the detail page repeats it. */}
-        {duration ? (
-          <span className="absolute bottom-3 left-3 rounded-full bg-ink/80 px-3 py-1 text-xs font-bold text-cream">
-            {duration}
-          </span>
-        ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-5">
-        <Badge tone="accent">
-          {t(
-            `category.${categoryKey(activity.category)}`,
-            null,
-            activity.category
-          )}
-        </Badge>
+      {/* Duration sits below the image so it never covers the photography. */}
+      {duration ? (
+        <span className="mt-3 ml-12 inline-flex self-start rounded-full bg-[#A75D3B] px-3 py-2 text-xs font-bold text-cream">
+          {duration}
+        </span>
+      ) : null}
 
-        <TitleTag className="text-xl">
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        <TitleTag className="inline-block rounded-xl bg-cream px-3 py-2 text-xl">
           {activity.title}
         </TitleTag>
 
@@ -99,6 +89,7 @@ export function ActivityCard({
             href={`/experiences/${activity.slug}`}
             variant="secondary"
             size="sm"
+            className="!border-[#A75D3B] !bg-[#A75D3B] !text-cream hover:!border-[#3D2314] hover:!bg-[#3D2314]"
           >
             {t('common.viewDetails')}
           </Button>
