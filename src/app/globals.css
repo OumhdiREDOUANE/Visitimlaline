@@ -175,38 +175,21 @@
 
 .experience-image-frame {
   position: relative;
-  background-color: #3D2314; /* Color dyāl l-border al-bni */
-  
-  /* Zdna f-l-padding bach l-line al-bni ykbar w-ybān (Tqdar t-jarrab mābēn 4px w 7px) */
-  padding: 10px !important;
+  background-color: #5B3825;
+  border: 2px solid #5B3825;
+  padding: 0 !important;
   box-sizing: border-box;
-
-  /* Mask 'alā l-frame al-khārijī */
-  mask-image: var(--experience-image-wave);
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-  -webkit-mask-image: var(--experience-image-wave);
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
 }
 
 /* Inner Image Container */
 .experience-card-image {
   position: absolute !important;
-  inset: 10px !important;
-  width: calc(100% - 20px) !important;
-  height: calc(100% - 20px) !important;
+  inset: 8px !important;
+  width: calc(100% - 16px) !important;
+  height: calc(100% - 16px) !important;
   display: block;
   object-fit: cover;
-
-  /* Nfs l-mask 'alā l-imāz bach tqaṭṭa' f-nfs l-mowja */
-  mask-image: var(--experience-image-wave);
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-  -webkit-mask-image: var(--experience-image-wave);
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-
+  border-radius: 16px;
 }
 
 /* Rising upward. Unflipped, so the tile's solid half is the end that touches

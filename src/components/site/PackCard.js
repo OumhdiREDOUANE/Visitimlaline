@@ -16,7 +16,7 @@ export function PackCard({
 }) {
   return (
     <Card
-      className="flex h-full flex-col overflow-hidden"
+      className="!border-[#E8D5B5] flex h-full flex-col overflow-hidden border-2 p-2"
     >
       <div className="experience-image-frame relative aspect-[16/10] w-full overflow-hidden rounded-[22px]">
         <Image

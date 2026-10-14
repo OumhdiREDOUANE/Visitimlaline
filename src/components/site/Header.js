@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/Button.js';
 import { LocaleSwitcher } from './LocaleSwitcher.js';
@@ -11,13 +12,20 @@ const links = [
 
 export function Header({ t, user }) {
   return (
-    <header className="no-print sticky top-0 z-30 border-b border-white/10 bg-ink/90 text-cream shadow-[0_12px_40px_rgb(42_33_26_/_12%)] backdrop-blur-md">
+    <header className="no-print sticky top-0 z-30 border-b border-ink/10 bg-[#FAF0DB] text-ink shadow-[0_12px_40px_rgb(42_33_26_/_12%)] backdrop-blur-md">
       <div className="page-shell flex flex-wrap items-center justify-between gap-4 py-4">
         <Link
           href="/"
-          className="font-display text-lg font-semibold uppercase tracking-[0.28em] text-cream"
+          className="flex items-center"
         >
-          Visitimlaline
+          <Image
+            src="/visitimlaline logo.png"
+            alt="Visitimlaline"
+            width={220}
+            height={64}
+            priority
+            className="h-10 w-auto object-contain mix-blend-multiply"
+          />
         </Link>
 
         <nav className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.14em] sm:gap-6">
@@ -25,13 +33,13 @@ export function Header({ t, user }) {
             <Link
               key={link.href}
               href={link.href}
-              className="font-semibold text-cream/80 transition-colors hover:text-sand"
+              className="font-semibold text-ink/80 transition-colors hover:text-terra"
             >
               {t(link.key)}
             </Link>
           ))}
-
-          <LocaleSwitcher />
+          
+          <LocaleSwitcher tone="light" />
 
           {user ? (
             <Link
@@ -40,7 +48,7 @@ export function Header({ t, user }) {
                   ? '/admin/bookings'
                   : '/staff/check-in'
               }
-              className="font-semibold text-cream/80 transition-colors hover:text-sand"
+              className="font-semibold text-ink/80 transition-colors hover:text-terra"
             >
               {t(
                 user.role === 'admin'
@@ -51,7 +59,7 @@ export function Header({ t, user }) {
           ) : (
             <Link
               href="/login"
-              className="font-semibold text-cream/80 transition-colors hover:text-sand"
+              className="font-semibold text-ink/80 transition-colors hover:text-terra"
             >
               {t('nav.login')}
             </Link>
