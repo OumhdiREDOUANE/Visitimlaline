@@ -15,7 +15,7 @@ export default async function HomePage() {
   const { t, locale } = await getI18n();
   const activities = getActivities();
   const packs = getPacks();
-  const hero = activities[0] ?? packs[0];
+  const hero = '/timlaline-desert-quad-adventure-sunset.webp';
   const categories = [
     ...new Set(
       activities.map(
@@ -29,7 +29,7 @@ export default async function HomePage() {
       <section className="on-dark relative isolate flex min-h-[760px] items-center overflow-hidden bg-ink text-cream">
         {hero ? (
           <Image
-            src={hero.hero}
+            src={hero}
             alt=""
             fill
             priority
@@ -38,32 +38,8 @@ export default async function HomePage() {
           />
         ) : null}
 
-        {/* The hero photo is bright sand, so the scrim is weighted to the
-            left: the copy sits on the darkest part of the gradient and the
-            image keeps its light on the right instead of being flattened
-            by a uniform opacity. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-linear-to-r from-ink/95 via-ink/70 to-ink/20"
-        />
-
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 -z-10 h-32 bg-linear-to-t from-ink to-transparent"
-        />
-
-        <div className="page-shell flex w-full flex-col gap-6 py-20 sm:py-24">
-          <p className="eyebrow">{t('home.eyebrow')}</p>
-
-          <h1 className="max-w-4xl text-5xl sm:text-6xl lg:text-7xl">
-            {t('home.title')}
-          </h1>
-
-          <p className="max-w-xl text-base text-cream/85 sm:text-lg">
-            {t('home.subtitle')}
-          </p>
-
-          <div className="flex flex-wrap gap-3 pt-2">
+        <div className="page-shell flex min-h-[760px] w-full flex-col justify-center gap-6 py-20 sm:py-24">
+          <div className="flex flex-wrap justify-end gap-3 pt-2">
             <Button
               href="/experiences"
               size="lg"
@@ -81,14 +57,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* The hero is `overflow-hidden` to clip its fill image, so a fringe
-          hung off it would be cut off; the strip between the two is where the
-          hero's ink reaches down from. */}
-      <WaveEdge
-        above
-        tone="ink"
-      />
 
       <section className="border-b border-ink/10 bg-surface">
         <div className="page-shell flex flex-wrap items-center gap-x-4 gap-y-3 py-5">
