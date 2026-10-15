@@ -48,10 +48,26 @@ export function PackCard({
    */
   titleAs: TitleTag = 'h3',
 }) {
+<<<<<<< HEAD
   const allImages = [
     pack.hero,
     ...(PACK_IMAGES[pack.slug] ?? []),
   ].filter(Boolean);
+=======
+  return (
+    <Card
+      className="!border-[#E8D5B5] flex h-full flex-col overflow-hidden border-2 p-2"
+    >
+      <div className="experience-image-frame relative aspect-[16/10] w-full overflow-hidden rounded-[22px]">
+        <Image
+          src={pack.hero}
+          alt={pack.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="experience-card-image object-cover"
+        />
+      </div>
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
 
   return (
     <Card className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-ink/10 bg-surface shadow-[0_14px_40px_-12px_rgba(42,33,26,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:border-terra/35 hover:shadow-[0_26px_60px_-15px_rgba(184,95,50,0.20)]">

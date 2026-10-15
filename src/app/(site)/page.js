@@ -13,9 +13,16 @@ import { HeroImageCycler } from '@/components/site/HeroImageCycler.js';
 import { categoryKey } from '@/lib/format.js';
 
 export default async function HomePage() {
+<<<<<<< HEAD
   const { t, locale, currency } = await getI18n();
   const activities = getActivities(locale);
   const packs = getPacks(locale);
+=======
+  const { t, locale } = await getI18n();
+  const activities = getActivities();
+  const packs = getPacks();
+  const hero = '/timlaline-desert-quad-adventure-sunset.webp';
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
   const categories = [
     ...new Set(
       activities.map(
@@ -27,12 +34,28 @@ export default async function HomePage() {
   return (
     <>
       <section className="on-dark relative isolate flex min-h-[760px] items-center overflow-hidden bg-ink text-cream">
+<<<<<<< HEAD
         <HeroImageCycler />
         <div className="absolute inset-0 z-10 bg-linear-to-r from-ink/95 via-ink/70 to-ink/25" />
         <div className="absolute inset-0 z-10 bg-linear-to-t from-ink/80 via-transparent to-transparent" />
 
         <div className="page-shell relative z-20 flex min-h-[760px] w-full flex-col justify-end gap-7 py-20 sm:py-24">
           <div className="animate-fade-up flex flex-wrap gap-3 pb-12 sm:pb-16">
+=======
+        {hero ? (
+          <Image
+            src={hero}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="-z-10 object-cover"
+          />
+        ) : null}
+
+        <div className="page-shell flex min-h-[760px] w-full flex-col justify-center gap-6 py-20 sm:py-24">
+          <div className="flex flex-wrap justify-end gap-3 pt-2">
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
             <Button
               href="/experiences"
               size="lg"
@@ -51,6 +74,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+<<<<<<< HEAD
       <section className="bg-sand/20">
         <div className="page-shell flex flex-col gap-8 py-16">
           <header className="flex flex-wrap items-end justify-between gap-4">
@@ -134,6 +158,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+=======
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
       <section className="border-b border-ink/10 bg-surface">
         <div className="page-shell flex flex-wrap items-center gap-x-4 gap-y-3 py-5">
           <p className="eyebrow">

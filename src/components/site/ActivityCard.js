@@ -32,6 +32,7 @@ export function ActivityCard({
   ].filter(Boolean);
 
   return (
+<<<<<<< HEAD
     <Card className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-ink/10 bg-surface shadow-[0_14px_40px_-12px_rgba(42,33,26,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:border-terra/35 hover:shadow-[0_26px_60px_-15px_rgba(184,95,50,0.20)]">
       <CardImageCycler images={allImages} alt={activity.title}>
         {category ? (
@@ -46,6 +47,20 @@ export function ActivityCard({
           </span>
         ) : null}
       </CardImageCycler>
+=======
+    <>
+<Card
+  className="!border-[#E8D5B5] flex h-full flex-col overflow-hidden border-2 p-2"
+>
+      <div className="experience-image-frame relative aspect-[16/10] w-full overflow-hidden rounded-[22px]">
+        <Image
+          src={activity.hero}
+          alt={activity.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="experience-card-image object-cover"
+        />
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
 
       <div className="flex flex-1 flex-col gap-3.5 p-6">
         <TitleTag className="text-2xl font-bold tracking-tight text-ink transition-colors group-hover:text-terra">

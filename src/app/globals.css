@@ -281,16 +281,33 @@
 
 .experience-image-frame {
   position: relative;
+<<<<<<< HEAD
   overflow: hidden;
+=======
+  background-color: #5B3825;
+  border: 2px solid #5B3825;
+  padding: 0 !important;
+  box-sizing: border-box;
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
 }
 
 .experience-card-image {
+<<<<<<< HEAD
   object-fit: cover;
   transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .group:hover .experience-card-image {
   transform: scale(1.06);
+=======
+  position: absolute !important;
+  inset: 8px !important;
+  width: calc(100% - 16px) !important;
+  height: calc(100% - 16px) !important;
+  display: block;
+  object-fit: cover;
+  border-radius: 16px;
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
 }
 
 /* Rising upward. Unflipped, so the tile's solid half is the end that touches

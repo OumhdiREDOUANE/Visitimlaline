@@ -13,10 +13,17 @@ const links = [
 export function Header({ t, user }) {
   return (
     <header className="no-print sticky top-0 z-30 border-b border-ink/10 bg-[#FAF0DB] text-ink shadow-[0_12px_40px_rgb(42_33_26_/_12%)] backdrop-blur-md">
+<<<<<<< HEAD
       <div className="page-shell flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-3 sm:py-4">
         <Link
           href="/"
           className="flex shrink-0 items-center"
+=======
+      <div className="page-shell flex flex-wrap items-center justify-between gap-4 py-4">
+        <Link
+          href="/"
+          className="flex items-center"
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
         >
           <Image
             src="/visitimlaline logo.png"
@@ -33,7 +40,11 @@ export function Header({ t, user }) {
             <Link
               key={link.href}
               href={link.href}
+<<<<<<< HEAD
               className="relative whitespace-nowrap font-semibold text-ink/80 transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-terra after:transition-all hover:text-terra hover:after:w-full"
+=======
+              className="font-semibold text-ink/80 transition-colors hover:text-terra"
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
             >
               {t(link.key)}
             </Link>
@@ -48,7 +59,11 @@ export function Header({ t, user }) {
                   ? '/admin/bookings'
                   : '/staff/check-in'
               }
+<<<<<<< HEAD
               className="relative whitespace-nowrap font-semibold text-ink/80 transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-terra after:transition-all hover:text-terra hover:after:w-full"
+=======
+              className="font-semibold text-ink/80 transition-colors hover:text-terra"
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
             >
               {t(
                 user.role === 'admin'
@@ -59,7 +74,11 @@ export function Header({ t, user }) {
           ) : (
             <Link
               href="/login"
+<<<<<<< HEAD
               className="relative whitespace-nowrap font-semibold text-ink/80 transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-terra after:transition-all hover:text-terra hover:after:w-full"
+=======
+              className="font-semibold text-ink/80 transition-colors hover:text-terra"
+>>>>>>> 59b0c7035139a35202498435e99dd26c89619577
             >
               {t('nav.login')}
             </Link>
