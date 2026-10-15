@@ -1,11 +1,10 @@
-
 PRAGMA foreign_keys = ON;
 
 -- ============================================
 -- ACTIVITIES
 -- ============================================
 
-INSERT OR IGNORE INTO activities (
+INSERT INTO activities (
     slug,
     title,
     category,
@@ -25,13 +24,15 @@ INSERT OR IGNORE INTO activities (
     'Quad Adventure',
     'quad',
     'Explore the Timlaline landscape on an exciting quad adventure.',
-    45,
+    450,
     60,
     120,
-    'https://images.unsplash.com/photo-1558981806-ec527fa84c39',
+    '/images/quad/timlaline-quad-adventure-desert-dunes1.webp',
     '[
-        "https://images.unsplash.com/photo-1558981806-ec527fa84c39",
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+        "/images/quad/timlaline-quad-adventure-desert-dunes1.webp",
+        "/images/quad/timlaline-atv-desert-adventure-morocco.webp",
+        "/images/quad/timlaline-quad-ride-sunset-desert.webp",
+        "/images/quad/timlaline-quad-riding-golden-dunes.webp"
     ]',
     '[
         "Quad bike",
@@ -52,33 +53,68 @@ INSERT OR IGNORE INTO activities (
     1
 ),
 (
-    'sunset-experience',
-    'Sunset Experience',
-    'sunset',
-    'Enjoy a memorable sunset experience surrounded by the Atlantic and desert landscape.',
-    35,
+    'sandboarding-dunes',
+    'Sandboarding in the Dunes',
+    'sandboard',
+    'Carve down the golden coastal dunes of Timlaline facing the Atlantic Ocean.',
+    250,
     60,
     90,
-    'https://images.unsplash.com/photo-1500534623283-312aade485b7',
+    '/images/sandboard/timlaline-sandboarding-desert-dunes1.webp',
     '[
-        "https://images.unsplash.com/photo-1500534623283-312aade485b7",
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+        "/images/sandboard/timlaline-sandboarding-desert-dunes1.webp",
+        "/images/sandboard/timlaline-sandboard-ride-golden-dunes.webp",
+        "/images/sandboard/timlaline-sandboarding-adventure-morocco.webp",
+        "/images/sandboard/timlaline-sandboarding-sunset-timlaline.webp"
     ]',
     '[
-        "Sunset viewing",
-        "Local guide",
-        "Refreshment"
+        "Pro sandboard & wax",
+        "Dune guide & instruction",
+        "Cold water & Moroccan tea"
     ]',
     '[
-        "Sunset time varies by date",
-        "Bring a light jacket",
-        "Please arrive before departure"
+        "Suitable for beginners and thrill-seekers",
+        "Barefoot or light sneakers recommended on the sand",
+        "Best golden light in the late afternoon"
     ]',
     '[
-        ["Arrival", "Meet the local team"],
-        ["Walk", "Move to the sunset viewpoint"],
-        ["Sunset", "Enjoy the sunset and landscape"],
-        ["Return", "Return to the meeting point"]
+        ["Meetup", "Welcome at the Timlaline canyon base"],
+        ["Climb", "Short scenic walk to the top of the main dune"],
+        ["Ride", "Learn balance techniques and glide down the dunes"],
+        ["Tea Break", "Relax with Moroccan mint tea overlooking the ocean"]
+    ]',
+    1
+),
+(
+    'camel-ride-tour',
+    'Camel Caravan Experience',
+    'camel',
+    'Follow the ancient coastal trail on a peaceful camel trek across the dunes and cliffs of Timlaline.',
+    300,
+    60,
+    90,
+    '/images/camel tour/timlaline-camel-caravan-desert-timlaline.webp',
+    '[
+        "/images/camel tour/timlaline-camel-caravan-desert-timlaline.webp",
+        "/images/camel tour/timlaline-camel-ride-desert-morocco1.webp",
+        "/images/camel tour/timlaline-camel-ride-sunset-timlaline.webp",
+        "/images/camel tour/timlaline-camel-tour-golden-dunes.webp"
+    ]',
+    '[
+        "Guided camel trek",
+        "Traditional nomad scarf photo stop",
+        "Moroccan mint tea"
+    ]',
+    '[
+        "Family friendly (kids can ride tandem)",
+        "Long pants and sunscreen recommended",
+        "Arrive 15 minutes before departure"
+    ]',
+    '[
+        ["Welcome", "Meet the camel handlers and your gentle dromedary"],
+        ["Coastal Trail", "Ride along the ridge where sand dunes meet the Atlantic"],
+        ["Photo Stop", "Pause on the highest crest for panoramic photos"],
+        ["Return", "Head back to camp for traditional mint tea"]
     ]',
     1
 ),
@@ -87,13 +123,15 @@ INSERT OR IGNORE INTO activities (
     'Cave Discovery',
     'cave',
     'Discover natural cave landscapes and learn more about the local environment.',
-    30,
+    300,
     60,
     120,
-    'https://images.unsplash.com/photo-1441974231531-c6227db76b6e',
+    '/images/caves/timlaline-cave-exploration-desert.webp',
     '[
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+        "/images/caves/timlaline-cave-exploration-desert.webp",
+        "/images/caves/timlaline-canyon-nature-tour-morocco1.webp",
+        "/images/caves/timlaline-canyon-to-beach-nature-tour.webp",
+        "/images/caves/timlaline-cliffs-beach-birds-timlaline.webp"
     ]',
     '[
         "Local guide",
@@ -114,42 +152,61 @@ INSERT OR IGNORE INTO activities (
     1
 ),
 (
-    'local-experience',
-    'Local Experience',
-    'local',
-    'Share a warm Moroccan local experience with tea, food and authentic human interaction.',
-    25,
+    'sunset-experience',
+    'Sunset Experience',
+    'sunset',
+    'Enjoy a memorable sunset experience surrounded by the Atlantic and desert landscape.',
+    350,
     60,
     90,
-    'https://images.unsplash.com/photo-1547592180-85f173990554',
+    '/images/sunset/timlaline-sunset-experience-desert1.webp',
     '[
-        "https://images.unsplash.com/photo-1547592180-85f173990554",
-        "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f"
+        "/images/sunset/timlaline-sunset-experience-desert1.webp",
+        "/images/sunset/timlaline-desert-sunset-atlantic-coast.webp",
+        "/images/sunset/timlaline-moroccan-tea-sunset-timlaline.webp",
+        "/images/sunset/timlaline-sunset-desert-view-morocco.webp"
     ]',
     '[
-        "Moroccan tea",
-        "Local food",
-        "Local host"
+        "Sunset viewing",
+        "Local guide",
+        "Moroccan tea"
     ]',
     '[
-        "Tell us about dietary restrictions",
-        "Respect local customs",
-        "The experience may vary depending on the host"
+        "Sunset time varies by date",
+        "Bring a light jacket",
+        "Please arrive before departure"
     ]',
     '[
-        ["Welcome", "Meet your local host"],
-        ["Tea", "Enjoy traditional Moroccan tea"],
-        ["Food", "Discover local food"],
-        ["Conversation", "Share the local experience"]
+        ["Arrival", "Meet the local team"],
+        ["Walk", "Move to the sunset viewpoint"],
+        ["Sunset", "Enjoy the sunset and landscape"],
+        ["Return", "Return to the meeting point"]
     ]',
     1
-);
+)
+ON CONFLICT(slug) DO UPDATE SET
+    title = excluded.title,
+    category = excluded.category,
+    description = excluded.description,
+    price_from = excluded.price_from,
+    duration_min = excluded.duration_min,
+    duration_max = excluded.duration_max,
+    hero = excluded.hero,
+    gallery = excluded.gallery,
+    inclusions = excluded.inclusions,
+    good_to_know = excluded.good_to_know,
+    itinerary = excluded.itinerary,
+    active = excluded.active,
+    updated_at = CURRENT_TIMESTAMP;
+
+DELETE FROM activities
+WHERE slug = 'local-experience';
 
 -- ============================================
 -- PACKS
 -- ============================================
 
-INSERT OR IGNORE INTO packs (
+INSERT INTO packs (
     slug,
     title,
     description,
@@ -161,51 +218,62 @@ INSERT OR IGNORE INTO packs (
 ) VALUES
 (
     'the-adventurer',
-    'The Adventurer',
-    'A combination of Quad Adventure and Cave Discovery.',
-    65,
-    '2-3 hours',
-    'https://images.unsplash.com/photo-1558981806-ec527fa84c39',
+    'The Ultimate Ride Pack',
+    'A combination of Quad Adventure, Sandboarding in the Dunes and Cave Discovery.',
+    650,
+    '3-4 hours',
+    '/visitimlaline-ultimate-ride-pack.webp',
     '[
         "Quad Adventure",
+        "Sandboarding in the Dunes",
         "Cave Discovery"
     ]',
     1
 ),
 (
     'the-sunset',
-    'The Sunset',
-    'Enjoy a Quad Adventure followed by a beautiful sunset experience.',
-    70,
-    '2-3 hours',
-    'https://images.unsplash.com/photo-1500534623283-312aade485b7',
+    'Desert Escape Pack',
+    'A camel caravan, sandboarding and sunset tea across the Timlaline dunes.',
+    700,
+    '3-4 hours',
+    '/visitimlaline-desert-escape-pack.webp',
     '[
-        "Quad Adventure",
-        "Sunset Experience"
+        "Camel Caravan Experience",
+        "Sandboarding in the Dunes",
+        "Sunset Experience & Tea"
     ]',
     1
 ),
 (
     'the-complete-experience',
-    'The Complete Experience',
-    'The complete Visitimlaline adventure combining Quad, Cave, Sunset and Local Experience.',
-    110,
-    '4-6 hours',
-    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    'The Wild Trio Pack',
+    'The complete Timlaline adventure combining quad, camel, cave and sunset experiences.',
+    1100,
+    '5-7 hours',
+    '/visitimlaline-the-wild-trio-pack.webp',
     '[
         "Quad Adventure",
+        "Camel Caravan Experience",
         "Cave Discovery",
-        "Sunset Experience",
-        "Local Experience"
+        "Sunset Experience & Tea"
     ]',
     1
-);
+)
+ON CONFLICT(slug) DO UPDATE SET
+    title = excluded.title,
+    description = excluded.description,
+    price_from = excluded.price_from,
+    duration = excluded.duration,
+    hero = excluded.hero,
+    includes = excluded.includes,
+    active = excluded.active,
+    updated_at = CURRENT_TIMESTAMP;
 
 -- ============================================
 -- DEMO BOOKINGS
 -- ============================================
 
-INSERT INTO bookings (
+INSERT OR IGNORE INTO bookings (
     booking_reference,
     access_code,
     activity_slug,
@@ -232,9 +300,9 @@ INSERT INTO bookings (
     '2026-10-10',
     '10:00',
     2,
-    45,
+    450,
     0,
-    90,
+    900,
     'NOT PAID YET'
 ),
 (
@@ -248,9 +316,9 @@ INSERT INTO bookings (
     '2026-10-11',
     '17:30',
     3,
-    35,
+    350,
     0,
-    105,
+    1050,
     'NOT PAID YET'
 ),
 (
@@ -264,9 +332,9 @@ INSERT INTO bookings (
     '2026-10-12',
     '14:00',
     2,
-    30,
+    300,
     0,
-    60,
+    600,
     'ARRIVED'
 );
 
@@ -284,6 +352,11 @@ SELECT
     'ARRIVAL',
     'Demo customer has arrived.'
 FROM bookings
-WHERE customer_name = 'Alex Demo'
+WHERE booking_reference = 'BK-9C0D1E2F'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM notifications
+      WHERE booking_id = bookings.id
+        AND type = 'ARRIVAL'
+  )
 LIMIT 1;
-

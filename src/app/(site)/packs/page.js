@@ -4,8 +4,8 @@ import { PackCard } from '@/components/site/PackCard.js';
 import { EmptyState } from '@/components/ui/EmptyState.js';
 
 export default async function PacksPage() {
-  const { t, locale } = await getI18n();
-  const packs = getPacks();
+  const { t, locale, currency } = await getI18n();
+  const packs = getPacks(locale);
 
   return (
     <div className="page-shell flex flex-col gap-10 py-16 sm:py-20">
@@ -27,6 +27,7 @@ export default async function PacksPage() {
               pack={pack}
               t={t}
               locale={locale}
+              currency={currency}
               titleAs="h2"
             />
           ))}

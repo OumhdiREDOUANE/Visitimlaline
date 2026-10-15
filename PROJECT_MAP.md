@@ -82,15 +82,10 @@ Explicitly **rejected**: `next-intl`, `swr`, `react-query`, `zustand`, `react-ho
 
 - Read (server components) → **call services directly**: `src/lib/services/*`.
 - Write + client interactivity → **HTTP** `/api/*` (one rule, no third path).
-- **Photography stays as it is.** The owner asked for the redesign to leave the images alone, so
-  `activities.hero` / `.gallery` and `packs.hero` still hold the original hotlinked
-  `images.unsplash.com` URLs in `database/seed.sql` and in the live rows, and
-  `next.config.mjs` keeps its `images.remotePatterns` allow-list for that host. **That allow-list is
-  load-bearing:** drop it and every remote `<Image>` 400s, so the catalog renders with no photography
-  at all. `tests/product-showcase.test.js` asserts both halves.
-- The photos are generic stock (a motorcycle for *Quad Adventure*, a forest for *Cave Discovery*,
-  food for *Local Experience*) and are served without sizing params. Replaced with the owner's own
-  photography when they have it — see §4.2.
+- **Photography is local.** `activities.hero` / `.gallery` and `packs.hero` use the owner's
+  WebP photography from `public/` via root-relative paths in `database/seed.sql`, so the catalog
+  does not depend on a remote image host. `tests/product-showcase.test.js` asserts the local
+  catalog paths and rejects Unsplash URLs.
 
 ---
 

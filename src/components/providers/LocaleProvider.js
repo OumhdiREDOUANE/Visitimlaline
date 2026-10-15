@@ -8,7 +8,9 @@ import {
 
 import {
   LOCALE_COOKIE,
+  CURRENCY_COOKIE,
   normalizeLocale,
+  normalizeCurrency,
 } from '@/lib/i18n/config.js';
 import { createTranslator } from '@/lib/i18n/translate.js';
 
@@ -18,12 +20,14 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export function LocaleProvider({
   locale,
+  currency = 'MAD',
   dictionary,
   children,
 }) {
   const value = useMemo(
     () => ({
       locale,
+      currency,
       t: createTranslator(dictionary),
       setLocale(next) {
         document.cookie = [
@@ -33,8 +37,16 @@ export function LocaleProvider({
           'samesite=lax',
         ].join('; ');
       },
+      setCurrency(next) {
+        document.cookie = [
+          `${CURRENCY_COOKIE}=${normalizeCurrency(next)}`,
+          'path=/',
+          `max-age=${COOKIE_MAX_AGE}`,
+          'samesite=lax',
+        ].join('; ');
+      },
     }),
-    [locale, dictionary]
+    [locale, currency, dictionary]
   );
 
   return (

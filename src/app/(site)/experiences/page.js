@@ -10,8 +10,8 @@ import { categoryKey } from '@/lib/format.js';
 export default async function ExperiencesPage({
   searchParams,
 }) {
-  const { t, locale } = await getI18n();
-  const activities = getActivities();
+  const { t, locale, currency } = await getI18n();
+  const activities = getActivities(locale);
   const params = await searchParams;
   const active = (params?.category ?? '').toString();
   const categories = [
@@ -69,6 +69,7 @@ export default async function ExperiencesPage({
               activity={activity}
               t={t}
               locale={locale}
+              currency={currency}
               titleAs="h2"
             />
           ))}

@@ -5,6 +5,7 @@ import './globals.css';
 import {
   getDictionary,
   getLocale,
+  getI18n,
 } from '@/lib/i18n/server.js';
 import { createTranslator } from '@/lib/i18n/translate.js';
 import { LocaleProvider } from '@/components/providers/LocaleProvider.js';
@@ -32,7 +33,7 @@ export async function generateMetadata() {
 export default async function RootLayout({
   children,
 }) {
-  const locale = await getLocale();
+  const { locale, currency } = await getI18n();
   const dictionary = getDictionary(locale);
 
   return (
@@ -43,6 +44,7 @@ export default async function RootLayout({
       <body className="flex min-h-full flex-col">
         <LocaleProvider
           locale={locale}
+          currency={currency}
           dictionary={dictionary}
         >
           {children}

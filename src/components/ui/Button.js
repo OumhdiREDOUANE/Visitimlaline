@@ -1,9 +1,9 @@
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-full font-bold uppercase tracking-[0.12em] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex items-center justify-center gap-2 rounded-full font-bold uppercase tracking-[0.12em] transition-all duration-200 active:scale-[0.98] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50';
 
 const variants = {
   primary:
-    'bg-terra text-white shadow-[0_12px_24px_rgb(184_95_50_/_18%)] hover:-translate-y-0.5 hover:bg-terra-deep hover:shadow-[0_16px_28px_rgb(184_95_50_/_25%)]',
+    'bg-terra text-white shadow-[0_10px_25px_-5px_rgba(184,95,50,0.45)] hover:bg-terra-deep hover:shadow-[0_14px_30px_-5px_rgba(157,77,38,0.6)]',
   secondary:
     'border border-sand bg-surface text-ink hover:border-terra hover:text-terra',
   dark: 'bg-ink text-cream hover:bg-forest',

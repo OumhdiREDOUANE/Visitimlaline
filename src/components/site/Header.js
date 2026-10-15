@@ -13,10 +13,10 @@ const links = [
 export function Header({ t, user }) {
   return (
     <header className="no-print sticky top-0 z-30 border-b border-ink/10 bg-[#FAF0DB] text-ink shadow-[0_12px_40px_rgb(42_33_26_/_12%)] backdrop-blur-md">
-      <div className="page-shell flex flex-wrap items-center justify-between gap-4 py-4">
+      <div className="page-shell flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-3 sm:py-4">
         <Link
           href="/"
-          className="flex items-center"
+          className="flex shrink-0 items-center"
         >
           <Image
             src="/visitimlaline logo.png"
@@ -28,12 +28,12 @@ export function Header({ t, user }) {
           />
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.14em] sm:gap-6">
+        <nav className="flex w-full flex-wrap items-center justify-end gap-x-4 gap-y-3 text-xs uppercase tracking-[0.14em] sm:w-auto sm:flex-nowrap sm:gap-6">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="font-semibold text-ink/80 transition-colors hover:text-terra"
+              className="relative whitespace-nowrap font-semibold text-ink/80 transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-terra after:transition-all hover:text-terra hover:after:w-full"
             >
               {t(link.key)}
             </Link>
@@ -48,7 +48,7 @@ export function Header({ t, user }) {
                   ? '/admin/bookings'
                   : '/staff/check-in'
               }
-              className="font-semibold text-ink/80 transition-colors hover:text-terra"
+              className="relative whitespace-nowrap font-semibold text-ink/80 transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-terra after:transition-all hover:text-terra hover:after:w-full"
             >
               {t(
                 user.role === 'admin'
@@ -59,7 +59,7 @@ export function Header({ t, user }) {
           ) : (
             <Link
               href="/login"
-              className="font-semibold text-ink/80 transition-colors hover:text-terra"
+              className="relative whitespace-nowrap font-semibold text-ink/80 transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-terra after:transition-all hover:text-terra hover:after:w-full"
             >
               {t('nav.login')}
             </Link>

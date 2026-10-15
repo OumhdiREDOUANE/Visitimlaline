@@ -1,12 +1,14 @@
 import { logger } from '@/lib/observability/logger';
 import { logRequest } from '@/lib/observability/route';
 import { createNewBooking, toGuestTicket } from '@/lib/services/booking.service';
+import { createNewBookingNotification } from '@/lib/services/notification.service';
 
 async function handlePOST(request) {
   try {
     const body = await request.json();
 
     const booking = createNewBooking(body);
+    await createNewBookingNotification(booking);
 
     logger.info('booking.created', {
       bookingId: booking.id,

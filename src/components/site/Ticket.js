@@ -8,6 +8,7 @@ import {
   formatDate,
   formatMoney,
 } from '@/lib/format.js';
+import { useI18n } from '@/components/providers/LocaleProvider.js';
 
 /**
  * The printable ticket. `qr_code` is a server-rendered data URL and is
@@ -20,6 +21,7 @@ export function Ticket({
   t,
   locale,
 }) {
+  const { currency } = useI18n();
   const rows = [
     {
       label: t('adminBookings.customer'),
@@ -45,7 +47,8 @@ export function Ticket({
       label: t('booking.total'),
       value: formatMoney(
         booking.total_price,
-        locale
+        locale,
+        currency
       ),
     },
   ];
@@ -113,13 +116,26 @@ export function Ticket({
             : t('booking.summaryActivity')}
         </Badge>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => window.print()}
-        >
-          {t('ticket.print')}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => window.print()}
+          >
+            {t('ticket.print')}
+          </Button>
+          <Button
+            href={`https://wa.me/?text=${encodeURIComponent(
+              `${productTitle} · ${booking.booking_reference} · ${booking.date} · ${booking.time}`
+            )}`}
+            variant="secondary"
+            size="sm"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t('ticket.whatsapp')}
+          </Button>
+        </div>
       </div>
     </Card>
   );

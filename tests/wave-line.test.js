@@ -96,8 +96,7 @@ const WAVED_CARDS = [
   ['src/app/login/page.js', 1, 1],
   ['src/app/(backoffice)/staff/check-in/page.js', 1, 1],
   ['src/components/booking/BookingWizard.js', 4, 4],
-  ['src/app/(backoffice)/admin/bookings/page.js', 2, 1],
-  ['src/components/site/ActivityCard.js', 1, 1],
+  ['src/app/(backoffice)/admin/bookings/page.js', 3, 1],
 ];
 
 /**
@@ -108,10 +107,11 @@ const WAVED_CARDS = [
  * buttons, and a frame around a form is a different thing from a frame around a
  * photograph.
  */
-const FRAMED_CARDS = ['src/components/site/ActivityCard.js'];
+const FRAMED_CARDS = [];
 
 /** Cards the owner did not ask for, and which must keep their plain border. */
 const PLAIN_CARDS = [
+  'src/components/site/ActivityCard.js',
   'src/components/site/PackCard.js',
   'src/components/site/Ticket.js',
   'src/components/ui/EmptyState.js',
