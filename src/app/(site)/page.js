@@ -29,12 +29,12 @@ export default async function HomePage() {
       <section className="on-dark relative isolate flex aspect-[2/1] w-full items-center overflow-hidden bg-ink text-cream sm:aspect-auto sm:min-h-[520px] lg:min-h-[760px]">
         <HeroImageCycler />
 
-        <div className="page-shell relative z-20 flex min-h-full w-full flex-col justify-end gap-7 pb-3 pt-2 sm:pb-10 sm:pt-0 md:pb-12">
-          <div className="animate-fade-up flex flex-row flex-wrap justify-end gap-2 sm:gap-3">
+        <div className="page-shell relative z-20 flex min-h-full w-full flex-col justify-end">
+          <div className="flex flex-row flex-wrap items-center justify-end gap-2 pb-3 pt-2 sm:gap-3 sm:pb-10 lg:pb-14">
             <Button
               href="/experiences"
               size="lg"
-              className="!border-[#FF7F00] !bg-[#FF7F00] !px-3.5 !py-2 !text-[11px] !text-white shadow-[0_10px_25px_-5px_rgba(255,127,0,0.50)] hover:!bg-[#E67200] hover:shadow-[0_14px_30px_-5px_rgba(255,127,0,0.65)] sm:!px-7 sm:!py-4 sm:!text-sm"
+              className="!border-[#ff7f00] !bg-[#ff7f00] !px-3.5 !py-2 !text-[11px] !text-white hover:!bg-[#e06d00] sm:!px-7 sm:!py-4 sm:!text-sm"
             >
               {t('home.ctaExperiences')}
             </Button>

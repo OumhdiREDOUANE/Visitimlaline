@@ -3,7 +3,7 @@ const base =
 
 const variants = {
   primary:
-    'bg-terra text-white shadow-[0_10px_25px_-5px_rgba(184,95,50,0.45)] hover:bg-terra-deep hover:shadow-[0_14px_30px_-5px_rgba(157,77,38,0.6)]',
+    'bg-[#ff7f00] text-white shadow-[0_12px_24px_rgb(255_127_0_/_28%)] hover:-translate-y-0.5 hover:bg-[#e06d00] hover:shadow-[0_16px_28px_rgb(255_127_0_/_38%)]',
   secondary:
     'border border-sand bg-surface text-ink hover:border-terra hover:text-terra',
   dark: 'bg-ink text-cream hover:bg-forest',

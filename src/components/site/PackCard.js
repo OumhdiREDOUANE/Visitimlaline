@@ -68,7 +68,7 @@ export function PackCard({
             href={`/booking?type=pack&slug=${pack.slug}`}
             variant="secondary"
             size="sm"
-            className="shrink-0 whitespace-nowrap rounded-full !border-terra !bg-terra !px-5 !py-2.5 text-xs font-bold uppercase tracking-[0.1em] !text-white shadow-sm hover:!bg-terra-deep"
+            className="shrink-0 whitespace-nowrap rounded-full !border-[#ff7f00] !bg-[#ff7f00] !px-5 !py-2.5 text-xs font-bold uppercase tracking-[0.1em] !text-white shadow-sm hover:!bg-[#e06d00]"
           >
             {t('packs.choose')}
             <span
