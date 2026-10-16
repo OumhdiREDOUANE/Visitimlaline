@@ -38,7 +38,7 @@ export function HeroImageCycler() {
           fill
           priority
           sizes="100vw"
-          className={`absolute inset-0 object-cover transition-opacity duration-300 ease-in-out ${
+          className={`absolute inset-0 object-contain object-center transition-opacity duration-300 ease-in-out sm:object-cover ${
             index === currentIndex ? 'z-0 opacity-100' : '-z-10 opacity-0'
           }`}
         />

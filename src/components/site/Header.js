@@ -13,7 +13,7 @@ const links = [
 export function Header({ t, user }) {
   return (
     <header className="no-print sticky top-0 z-30 border-b border-ink/10 bg-[#FAF0DB] text-ink shadow-[0_12px_40px_rgb(42_33_26_/_12%)] backdrop-blur-md">
-      <div className="page-shell flex flex-wrap items-center justify-between gap-4 py-4">
+      <div className="page-shell flex flex-wrap items-center justify-between gap-2 py-2.5 sm:gap-5 sm:py-4">
         <Link href="/" className="flex items-center">
           <Image
             src="/visitimlaline logo.png"
@@ -25,7 +25,7 @@ export function Header({ t, user }) {
           />
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.14em] sm:gap-6">
+        <nav className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.14em] sm:gap-5">
           {links.map((link) => (
             <Link
               key={link.href}
