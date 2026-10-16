@@ -6,7 +6,7 @@ import { BookingWizard } from '@/components/booking/BookingWizard.js';
 export default async function BookingPage({
   searchParams,
 }) {
-  const { t } = await getI18n();
+  const { t, locale, currency } = await getI18n();
   const params = await searchParams;
   const type =
     (params?.type ?? '').toString() === 'pack'
@@ -24,8 +24,9 @@ export default async function BookingPage({
       </header>
 
       <BookingWizard
-        activities={getActivities()}
-        packs={getPacks()}
+        activities={getActivities(locale)}
+        packs={getPacks(locale)}
+        currency={currency}
         initialType={type}
         initialSlug={slug}
       />

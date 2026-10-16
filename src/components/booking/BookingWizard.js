@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import { apiFetch } from '@/lib/api-client.js';
 import { useI18n } from '@/components/providers/LocaleProvider.js';
@@ -15,6 +16,7 @@ import { Alert } from '@/components/ui/Alert.js';
 import { Ticket } from '@/components/site/Ticket.js';
 import {
   formatMoney,
+  formatDurationRange,
   todayISO,
 } from '@/lib/format.js';
 
@@ -37,7 +39,7 @@ export function BookingWizard({
   initialType,
   initialSlug,
 }) {
-  const { t, locale } = useI18n();
+  const { t, locale, currency } = useI18n();
 
   const [type, setType] = useState(
     initialType === 'pack' ? 'pack' : 'activity'
@@ -65,6 +67,18 @@ export function BookingWizard({
   const product = catalog.find(
     (item) => item.slug === slug
   );
+  const progress = !slug
+    ? 1
+    : !date || !time
+      ? 2
+      : 3;
+  const previewDuration = product?.duration_min
+    ? formatDurationRange(
+        product.duration_min,
+        product.duration_max,
+        t
+      )
+    : product?.duration ?? '';
 
   const selectedSlot = slots?.find(
     (slot) => slot.time === time
@@ -234,6 +248,38 @@ export function BookingWizard({
       onSubmit={submit}
       className="flex flex-col gap-8"
     >
+      <ol className="grid gap-2 sm:grid-cols-3">
+        {[
+          t('booking.stepExperience'),
+          t('booking.stepTime'),
+          t('booking.stepDetails'),
+        ].map((label, index) => {
+          const step = index + 1;
+          const complete = progress > step;
+          const active = progress === step;
+
+          return (
+            <li
+              key={label}
+              className={`flex items-center gap-3 rounded-2xl border px-4 py-3 text-xs font-bold transition-colors ${
+                active || complete
+                  ? 'border-terra bg-terra/10 text-terra-deep'
+                  : 'border-ink/10 text-muted'
+              }`}
+            >
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                active || complete
+                  ? 'bg-terra text-white'
+                  : 'bg-ink/5 text-muted'
+              }`}>
+                {complete ? '✓' : step}
+              </span>
+              <span>{label}</span>
+            </li>
+          );
+        })}
+      </ol>
+
       <Card
         className="flex flex-col gap-5 p-6"
       >
@@ -298,6 +344,43 @@ export function BookingWizard({
             ))}
           </SelectInput>
         </Field>
+
+        {product ? (
+          <div className="flex flex-col gap-4 rounded-2xl border border-sand/40 bg-cream/60 p-3 sm:flex-row">
+            <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-xl sm:w-40">
+              <Image
+                src={product.hero}
+                alt=""
+                fill
+                sizes="160px"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex min-w-0 flex-col justify-center gap-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="font-display text-lg">{product.title}</p>
+                <span className="text-sm font-bold text-terra">
+                  {formatMoney(product.price_from, locale, currency)}
+                  <span className="ml-1 text-xs font-normal text-muted">
+                    {t('common.perPerson')}
+                  </span>
+                </span>
+              </div>
+              {previewDuration ? (
+                <p className="text-xs text-muted">
+                  {previewDuration}
+                </p>
+              ) : null}
+              <div className="flex flex-wrap gap-1.5">
+                {(product.inclusions ?? product.includes ?? []).slice(0, 3).map((item) => (
+                  <span key={item} className="rounded-full bg-surface px-2.5 py-1 text-[0.6875rem] font-semibold text-muted">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
@@ -369,6 +452,7 @@ export function BookingWizard({
                 })}
                 fullLabel={t('booking.slotFull')}
                 onSelect={() => setTime(slot.time)}
+                goldenHourLabel={t('booking.goldenHour')}
               />
             ))}
           </div>
@@ -476,7 +560,8 @@ export function BookingWizard({
               product
                 ? formatMoney(
                     product.price_from * guests,
-                    locale
+                  locale,
+                  currency
                   )
                 : '—'
             }
@@ -484,7 +569,7 @@ export function BookingWizard({
         </dl>
 
         <p className="text-xs text-muted">
-          {t('booking.paymentNote')}
+          {t('booking.paymentNote')} {t('booking.currencyNote')}
         </p>
 
         {alert ? (
@@ -518,6 +603,7 @@ function SlotButton({
   label,
   fullLabel,
   onSelect,
+  goldenHourLabel,
 }) {
   const disabled = !slot.available;
 
@@ -533,11 +619,26 @@ function SlotButton({
           : 'border-ink/15 hover:border-ink/40'
       } ${disabled ? 'cursor-not-allowed opacity-40' : ''}`}
     >
-      <span className="block font-bold">
-        {slot.time}
+      <span className="flex items-center justify-between gap-2 font-bold">
+        <span>{slot.time}</span>
+        {slot.time === '16:30' || slot.time === '17:30' ? (
+          <span className="text-[0.625rem] text-gold">
+            ☀️ {goldenHourLabel}
+          </span>
+        ) : null}
       </span>
       <span className="block text-xs">
         {disabled ? fullLabel : label}
+      </span>
+      <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-ink/10">
+        <span
+          className={`block h-full rounded-full ${
+            disabled ? 'bg-muted' : 'bg-gold'
+          }`}
+          style={{
+            width: `${Math.max(0, Math.min(100, (slot.remaining_guests / MAX_GUESTS) * 100))}%`,
+          }}
+        />
       </span>
     </button>
   );

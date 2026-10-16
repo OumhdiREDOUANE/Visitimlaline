@@ -4,7 +4,9 @@ import fr from './dictionaries/fr.js';
 import en from './dictionaries/en.js';
 import {
   LOCALE_COOKIE,
+  CURRENCY_COOKIE,
   normalizeLocale,
+  normalizeCurrency,
 } from './config.js';
 import { createTranslator } from './translate.js';
 
@@ -22,9 +24,14 @@ export async function getLocale() {
 
 export async function getI18n() {
   const locale = await getLocale();
+  const store = await cookies();
+  const currency = normalizeCurrency(
+    store.get(CURRENCY_COOKIE)?.value
+  );
 
   return {
     locale,
+    currency,
     t: createTranslator(getDictionary(locale)),
   };
 }

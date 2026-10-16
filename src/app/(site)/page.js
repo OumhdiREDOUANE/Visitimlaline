@@ -9,13 +9,13 @@ import { CategoryPill } from '@/components/site/CategoryPill.js';
 import { PackCard } from '@/components/site/PackCard.js';
 import { WaveEdge } from '@/components/ui/WaveEdge.js';
 import { Button } from '@/components/ui/Button.js';
+import { HeroImageCycler } from '@/components/site/HeroImageCycler.js';
 import { categoryKey } from '@/lib/format.js';
 
 export default async function HomePage() {
-  const { t, locale } = await getI18n();
-  const activities = getActivities();
-  const packs = getPacks();
-  const hero = '/timlaline-desert-quad-adventure-sunset.webp';
+  const { t, locale, currency } = await getI18n();
+  const activities = getActivities(locale);
+  const packs = getPacks(locale);
   const categories = [
     ...new Set(
       activities.map(
@@ -27,22 +27,14 @@ export default async function HomePage() {
   return (
     <>
       <section className="on-dark relative isolate flex min-h-[760px] items-center overflow-hidden bg-ink text-cream">
-        {hero ? (
-          <Image
-            src={hero}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="-z-10 object-cover"
-          />
-        ) : null}
+        <HeroImageCycler />
 
-        <div className="page-shell flex min-h-[760px] w-full flex-col justify-center gap-6 py-20 sm:py-24">
-          <div className="flex flex-wrap justify-end gap-3 pt-2">
+        <div className="page-shell relative z-20 flex min-h-[760px] w-full flex-col justify-end gap-7 pb-8 sm:pb-10 md:pb-12">
+          <div className="animate-fade-up flex flex-wrap gap-3">
             <Button
               href="/experiences"
               size="lg"
+              className="!border-[#FF7F00] !bg-[#FF7F00] !text-white shadow-[0_10px_25px_-5px_rgba(255,127,0,0.50)] hover:!bg-[#E67200] hover:shadow-[0_14px_30px_-5px_rgba(255,127,0,0.65)]"
             >
               {t('home.ctaExperiences')}
             </Button>
@@ -54,6 +46,89 @@ export default async function HomePage() {
             >
               {t('home.ctaPacks')}
             </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-sand/20">
+        <div className="page-shell flex flex-col gap-8 py-16">
+          <header className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">{t('home.reviewsEyebrow')}</p>
+              <h2 className="mt-2 text-4xl">{t('home.reviewsTitle')}</h2>
+            </div>
+            <p className="rounded-full bg-surface px-4 py-2 text-sm font-bold text-terra">
+              4.9/5 ★
+            </p>
+          </header>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              ['Amelia', 'United Kingdom', 'Quad Adventure', 'The golden dunes and our guide made this the highlight of our Morocco trip.'],
+              ['Youssef', 'France', 'Sandboarding in the Dunes', 'Perfect for beginners, with beautiful Atlantic views and great local hospitality.'],
+              ['Sofia', 'Spain', 'Camel Caravan Experience', 'A calm, authentic ride along the coast. The mint tea at the end was unforgettable.'],
+            ].map(([name, country, activity, quote]) => (
+              <article key={name} className="card-interactive rounded-[28px] border border-sand/40 bg-surface p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-bold">{name}</p>
+                  <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-muted">{country}</span>
+                </div>
+                <p className="mt-3 text-sm tracking-[0.12em] text-gold">★★★★★</p>
+                <p className="mt-3 text-sm leading-6 text-muted">“{quote}”</p>
+                <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-terra">{activity}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="page-shell grid gap-10 py-16 lg:grid-cols-[1fr_1.15fr]">
+        <div>
+          <p className="eyebrow">{t('home.faqEyebrow')}</p>
+          <h2 className="mt-2 text-4xl">{t('home.faqTitle')}</h2>
+          <p className="mt-4 max-w-md text-muted">{t('home.faqLead')}</p>
+        </div>
+        <div className="flex flex-col gap-3">
+          {[
+            ['home.faqPaymentQuestion', 'home.faqPaymentAnswer'],
+            ['home.faqBeginnerQuestion', 'home.faqBeginnerAnswer'],
+            ['home.faqBringQuestion', 'home.faqBringAnswer'],
+            ['home.faqMeetingQuestion', 'home.faqMeetingAnswer'],
+          ].map(([question, answer]) => (
+            <details key={question} className="group rounded-2xl border border-ink/10 bg-surface px-5 py-4 shadow-sm">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">
+                {t(question)}
+                <span className="text-xl text-terra group-open:hidden">+</span>
+                <span className="hidden text-xl text-terra group-open:inline">−</span>
+              </summary>
+              <p className="pt-3 text-sm leading-6 text-muted">{t(answer)}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-ink/5">
+        <div className="page-shell grid gap-8 py-16 md:grid-cols-[1.1fr_1fr] md:items-center">
+          <div>
+            <p className="eyebrow">{t('home.locationEyebrow')}</p>
+            <h2 className="mt-2 text-4xl">{t('home.locationTitle')}</h2>
+            <p className="mt-4 max-w-xl text-muted">{t('home.locationText')}</p>
+            <a
+              href="https://maps.google.com/?q=Timlaline+Dunes+Morocco"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex font-bold text-terra underline underline-offset-4"
+            >
+              {t('home.locationCta')}
+            </a>
+          </div>
+          <div className="overflow-hidden rounded-[28px] border border-sand/40 bg-surface p-2 shadow-[0_20px_60px_rgba(42,33,26,0.08)]">
+            <iframe
+              title={t('home.locationTitle')}
+              src="https://www.google.com/maps?q=Timlaline%20Dunes%20Morocco&output=embed"
+              className="h-72 w-full rounded-[22px] border-0"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
@@ -109,6 +184,7 @@ export default async function HomePage() {
               activity={activity}
               t={t}
               locale={locale}
+              currency={currency}
             />
           ))}
         </div>
@@ -139,25 +215,37 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-center">
-            {[
-              activities.length,
-              packs.length,
-            ].map((value, index) => (
-              <div
-                key={index}
-                className="rounded-2xl border border-cream/15 bg-ink/10 px-4 py-8"
-              >
-                <p className="font-display text-4xl">
-                  {value}
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-cream/70">
-                  {index === 0
-                    ? t('nav.experiences')
-                    : t('nav.packs')}
-                </p>
-              </div>
-            ))}
+          <div className="relative min-h-[420px]">
+            <div className="absolute inset-x-8 top-0 overflow-hidden rounded-[2rem] border border-cream/20 shadow-[0_28px_70px_rgba(0,0,0,0.22)] sm:inset-x-12">
+              <Image
+                src="/timlaline-desert-landscape-atlantic-morocco.jpg"
+                alt=""
+                width={900}
+                height={1100}
+                className="h-[360px] w-full object-cover sm:h-[420px]"
+              />
+            </div>
+
+            <div className="card-interactive absolute left-0 top-16 rounded-2xl border border-cream/20 bg-ink/75 px-4 py-3 backdrop-blur-md">
+              <p className="font-display text-3xl">{activities.length}</p>
+              <p className="text-xs uppercase tracking-[0.14em] text-cream/70">
+                {t('home.statsExperiences')}
+              </p>
+            </div>
+
+            <div className="card-interactive absolute right-0 top-44 rounded-2xl border border-cream/20 bg-ink/75 px-4 py-3 backdrop-blur-md">
+              <p className="font-display text-3xl">{packs.length}</p>
+              <p className="text-xs uppercase tracking-[0.14em] text-cream/70">
+                {t('home.statsPacks')}
+              </p>
+            </div>
+
+            <div className="card-interactive absolute bottom-0 left-8 rounded-2xl border border-sand/40 bg-terra-deep/90 px-4 py-3 backdrop-blur-md sm:left-16">
+              <p className="font-display text-3xl">100%</p>
+              <p className="text-xs uppercase tracking-[0.14em] text-cream/80">
+                {t('home.statsGuiding')}
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -180,6 +268,7 @@ export default async function HomePage() {
               pack={pack}
               t={t}
               locale={locale}
+              currency={currency}
             />
           ))}
         </div>

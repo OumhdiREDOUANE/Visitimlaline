@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
@@ -9,14 +9,13 @@ import { formatDurationRange } from '../src/lib/format.js';
 /**
  * The showcase redesign (2026-09-25) rebuilt the public product surfaces on
  * the anatomy borrowed from the two reference sites: a photo, the commercial
- * facts, a price block and a real call to action. The palette, the fonts and
- * the photography were left exactly as they were.
+ * facts, a price block and a real call to action. The palette and the fonts
+ * were left exactly as they were.
  *
  * These tests lock the four things that could silently regress: a card losing
  * the facts it now advertises, the duration wording drifting between the card
- * and the detail page, the hero going back to a flat opacity, and — because the
- * photographs are hotlinked — the image host falling out of the allow-list,
- * which would 400 every hero on the site.
+ * and the detail page, the hero going back to a flat opacity, and local
+ * photography paths being replaced by remote stock images.
  */
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -25,30 +24,40 @@ const read = (relative) =>
 
 const seed = read('database/seed.sql');
 
-test('the photography is untouched: the seed still hotlinks Unsplash', () => {
-  const heroes = [
-    ...seed.matchAll(/'(https:\/\/images\.unsplash\.com\/[^']+)'/g),
+test('the catalog uses local Timlaline photography', () => {
+  const paths = [
+    ...seed.matchAll(
+      /["'](\/(?:images\/[^"']+|visitimlaline-[^"']+\.webp))["']/g
+    ),
   ].map((match) => match[1]);
 
-  assert.equal(
-    heroes.length,
-    7,
-    'expected the 7 original product hero URLs in the seed'
+  assert.ok(paths.length > 0, 'no local catalog image paths found');
+  assert.ok(
+    paths.every((path) => path.endsWith('.webp')),
+    'catalog photography must use WebP assets'
   );
+  for (const imagePath of new Set(paths)) {
+    assert.ok(
+      existsSync(join(ROOT, 'public', imagePath.slice(1))),
+      `${imagePath} is missing from public/`
+    );
+  }
   assert.doesNotMatch(
     seed,
-    /'\/images\//,
-    'a self-hosted image path crept into the seed'
+    /https:\/\/images\.unsplash\.com/,
+    'a remote stock image URL remains in the catalog seed'
   );
 });
 
-test('the image host is still allowed by next.config.mjs', () => {
-  // Without this allow-list every remote <Image> 400s, so the whole catalog
-  // renders without photography.
-  const config = read('next.config.mjs');
-
-  assert.match(config, /remotePatterns/);
-  assert.match(config, /hostname: 'images\.unsplash\.com'/);
+test('the catalog pack heroes use local photography', () => {
+  for (const hero of [
+    '/visitimlaline-ultimate-ride-pack.webp',
+    '/visitimlaline-desert-escape-pack.webp',
+    '/visitimlaline-the-wild-trio-pack.webp',
+  ]) {
+    assert.match(seed, new RegExp(hero.replaceAll('.', '\\.')));
+    assert.ok(existsSync(join(ROOT, 'public', hero.slice(1))));
+  }
 });
 
 test('the experience card advertises the commercial facts', () => {

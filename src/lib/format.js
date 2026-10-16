@@ -15,14 +15,16 @@ export function intlLocale(locale) {
   return INTL_LOCALES[locale] ?? INTL_LOCALES.fr;
 }
 
-export function formatMoney(amount, locale) {
-  const value = Number(amount);
+export function formatMoney(amountMad, locale, currency = 'MAD') {
+  const value = Number(amountMad);
+  const normalizedCurrency = currency === 'EUR' ? 'EUR' : 'MAD';
+  const amount = normalizedCurrency === 'EUR' ? value / 10 : value;
 
   return new Intl.NumberFormat(intlLocale(locale), {
     style: 'currency',
-    currency: 'MAD',
+    currency: normalizedCurrency,
     maximumFractionDigits: 0,
-  }).format(Number.isFinite(value) ? value : 0);
+  }).format(Number.isFinite(amount) ? amount : 0);
 }
 
 /** `YYYY-MM-DD` rendered without any timezone shift. */

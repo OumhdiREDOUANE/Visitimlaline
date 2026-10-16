@@ -46,6 +46,40 @@ Status: ${booking.status}
   return notificationId;
 }
 
+export async function createNewBookingNotification(booking) {
+  const product = booking.activity_slug || booking.pack_slug;
+  const message = `
+🆕 New Booking Received!
+Reference: ${booking.booking_reference}
+Customer Name: ${booking.customer_name}
+Phone/WhatsApp: ${booking.phone}
+Email: ${booking.email}
+Product: ${product}
+Date: ${booking.date}
+Time: ${booking.time}
+Guests: ${booking.guests}
+Total Price: ${booking.total_price} MAD
+`.trim();
+
+  const notificationId = createNotification({
+    booking_id: booking.id,
+    type: 'NEW_BOOKING',
+    message,
+  });
+
+  try {
+    await sendTelegramMessage(message);
+  } catch (error) {
+    logger.warn('telegram.notification_failed', {
+      notificationId,
+      bookingId: booking.id,
+      error: error.message,
+    });
+  }
+
+  return notificationId;
+}
+
 export function getAdminNotifications() {
   return getAllNotifications();
 }

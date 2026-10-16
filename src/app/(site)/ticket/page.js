@@ -5,10 +5,10 @@ import { TicketLookup } from '@/components/site/TicketLookup.js';
 import { Button } from '@/components/ui/Button.js';
 
 export default async function TicketPage() {
-  const { t } = await getI18n();
+  const { t, locale } = await getI18n();
 
   const products = Object.fromEntries(
-    [...getActivities(), ...getPacks()].map((item) => [
+    [...getActivities(locale), ...getPacks(locale)].map((item) => [
       item.slug,
       item.title,
     ])

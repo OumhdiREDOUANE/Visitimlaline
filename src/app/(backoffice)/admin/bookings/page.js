@@ -51,6 +51,16 @@ export default async function AdminBookingsPage({
   const bookings = getAdminBookings(filters).map(
     toAdminBooking
   );
+  const allBookings = getAdminBookings({}).map(toAdminBooking);
+  const expectedGuests = allBookings
+    .filter((booking) => booking.status !== 'CANCELLED')
+    .reduce((total, booking) => total + Number(booking.guests || 0), 0);
+  const arrivedBookings = allBookings.filter(
+    (booking) => booking.status === 'ARRIVED'
+  ).length;
+  const expectedRevenue = allBookings
+    .filter((booking) => booking.status !== 'CANCELLED')
+    .reduce((total, booking) => total + Number(booking.total_price || 0), 0);
 
   const titles = Object.fromEntries(
     [...activities, ...packs].map((item) => [
@@ -78,6 +88,16 @@ export default async function AdminBookingsPage({
           {t('adminBookings.lead')}
         </p>
       </header>
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard label={t('adminBookings.kpiTotal')} value={allBookings.length} />
+        <KpiCard label={t('adminBookings.kpiGuests')} value={expectedGuests} />
+        <KpiCard label={t('adminBookings.kpiArrived')} value={arrivedBookings} />
+        <KpiCard
+          label={t('adminBookings.kpiRevenue')}
+          value={formatMoney(expectedRevenue, locale)}
+        />
+      </section>
 
       <form className="flex flex-wrap items-end gap-4">
         <Field
@@ -275,7 +295,19 @@ export default async function AdminBookingsPage({
           <dl className="grid gap-4 sm:grid-cols-3">
             <Detail
               label={t('adminBookings.customer')}
-              value={`${detail.customer_name} · ${detail.phone}`}
+              value={
+                <span className="flex flex-col gap-1">
+                  <span>{detail.customer_name}</span>
+                  <a
+                    href={`https://wa.me/${String(detail.phone).replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-terra underline underline-offset-4"
+                  >
+                    {detail.phone}
+                  </a>
+                </span>
+              }
             />
             <Detail
               label={t('adminBookings.product')}
@@ -339,6 +371,17 @@ function Detail({ label, value }) {
         {value}
       </dd>
     </div>
+  );
+}
+
+function KpiCard({ label, value }) {
+  return (
+    <Card className="card-interactive p-5">
+      <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted">
+        {label}
+      </p>
+      <p className="mt-3 font-display text-3xl text-ink">{value}</p>
+    </Card>
   );
 }
 
