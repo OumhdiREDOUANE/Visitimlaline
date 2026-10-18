@@ -12,6 +12,7 @@ const adminLinks = [
     key: 'nav.notifications',
   },
   { href: '/staff/check-in', key: 'nav.checkIn' },
+  { href: '/admin/prices', key: 'nav.prices' },
 ];
 
 const staffLinks = [

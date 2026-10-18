@@ -14,6 +14,7 @@ export default {
     bookings: 'Bookings',
     notifications: 'Notifications',
     checkIn: 'Check-in',
+    prices: 'Prices',
   },
 
   common: {
@@ -289,4 +290,29 @@ export default {
     title: 'Page not found',
     text: 'This page does not exist or has been moved.',
   },
+  
+adminPrices: {
+  title: 'Price management',
+  lead: 'Click a price to edit it.',
+  instructions: 'Press Enter to save or Escape to cancel.',
+  activities: 'Activities',
+  packs: 'Packs',
+  activity: 'Activity',
+  category: 'Category',
+  duration: 'Duration',
+  basePrice: 'Base price',
+  countActivities: 'activities',
+  countPacks: 'packs',
+  noActivities: 'No active activities.',
+  noPacks: 'No active packs.',
+  administration: 'Administration',
+  currency: 'MAD',
+  save: 'Save',
+  cancel: 'Cancel',
+  saving: 'Saving...',
+  saved: 'Price saved successfully.',
+  invalidPrice: 'Please enter a valid price.',
+  saveError: 'Unable to save the price.',
+},
+
 };

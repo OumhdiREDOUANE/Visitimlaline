@@ -14,6 +14,7 @@ export default {
     bookings: 'Réservations',
     notifications: 'Notifications',
     checkIn: 'Arrivées',
+    prices:"prix",
   },
 
   common: {
@@ -290,4 +291,29 @@ export default {
     title: 'Page introuvable',
     text: 'Cette page n’existe pas ou a été déplacée.',
   },
+  
+adminPrices: {
+  title: 'Gestion des prix',
+  lead: 'Cliquez sur un prix pour le modifier.',
+  instructions: 'Appuyez sur Entrée pour enregistrer ou sur Échap pour annuler.',
+  activities: 'Activités',
+  packs: 'Packs',
+  activity: 'Activité',
+  category: 'Catégorie',
+  duration: 'Durée',
+  basePrice: 'Prix de base',
+  countActivities: 'activité(s)',
+  countPacks: 'pack(s)',
+  noActivities: 'Aucune activité active.',
+  noPacks: 'Aucun pack actif.',
+  administration: 'Administration',
+  currency: 'MAD',
+  save: 'Enregistrer',
+  cancel: 'Annuler',
+  saving: 'Enregistrement...',
+  saved: 'Prix enregistré avec succès.',
+  invalidPrice: 'Veuillez saisir un prix valide.',
+  saveError: 'Impossible d’enregistrer le prix.',
+},
+
 };

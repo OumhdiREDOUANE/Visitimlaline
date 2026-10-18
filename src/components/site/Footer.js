@@ -28,7 +28,7 @@ export function Footer({ t }) {
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-sand">{t('footer.contact')}</p>
           <div className="mt-4 flex flex-col gap-3 text-sm text-cream/80">
             <a href="https://maps.google.com/?q=Timlaline+Dunes+Morocco" target="_blank" rel="noreferrer" className="hover:text-cream">{t('footer.maps')}</a>
-            <a href="https://wa.me/21272912433 " target="_blank" rel="noreferrer" className="hover:text-cream">WhatsApp</a>
+            <a href="https://wa.me/212727912433 " target="_blank" rel="noreferrer" className="hover:text-cream">WhatsApp</a>
             <a href="https://instagram.com/visitimlaline" target="_blank" rel="noreferrer" className="hover:text-cream">Instagram</a>
           </div>
         </div>

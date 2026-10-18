@@ -3,6 +3,7 @@ import { getBookedGuests } from '../db/bookings.js';
 export const SLOTS = [
   '10:00',
   '14:00',
+  '15:00',
   '16:30',
   '17:30',
 ];
