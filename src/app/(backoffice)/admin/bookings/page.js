@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { getI18n } from '@/lib/i18n/server.js';
 import { requireAdmin } from '@/lib/auth/guards.js';
 import {
-  getAdminBookings,
-  getAdminBookingDetails,
+  getBookings,
+  getBookingDetails,
   toAdminBooking,
 } from '@/lib/services/booking.service.js';
 import { getActivities } from '@/lib/services/activity.service.js';
@@ -48,10 +48,10 @@ export default async function AdminBookingsPage({
 
   const activities = getActivities();
   const packs = getPacks();
-  const bookings = getAdminBookings(filters).map(
+  const bookings = getBookings('admin', filters).map(
     toAdminBooking
   );
-  const allBookings = getAdminBookings({}).map(toAdminBooking);
+  const allBookings = getBookings('admin', {}).map(toAdminBooking);
   const expectedGuests = allBookings
     .filter((booking) => booking.status !== 'CANCELLED')
     .reduce((total, booking) => total + Number(booking.guests || 0), 0);
@@ -74,7 +74,7 @@ export default async function AdminBookingsPage({
       (row) => String(row.id) === selected
     )
       ? toAdminBooking(
-          getAdminBookingDetails(Number(selected))
+          getBookingDetails(Number(selected))
         )
       : null;
 

@@ -1,7 +1,7 @@
 import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
 import {
-  getAdminBookings,
+  getBookings,
   toAdminBooking,
 } from '@/lib/services/booking.service';
 
@@ -21,7 +21,7 @@ async function handleGET(request) {
       pack: pack || null,
     };
 
-    const bookings = getAdminBookings(filters);
+    const bookings = getBookings(filters);
 
     return Response.json(
       {

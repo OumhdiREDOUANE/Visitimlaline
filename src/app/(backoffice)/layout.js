@@ -16,6 +16,7 @@ const adminLinks = [
 
 const staffLinks = [
   { href: '/staff/check-in', key: 'nav.checkIn' },
+  { href: '/staff/bookings', key: 'nav.bookings' },
 ];
 
 export default async function BackofficeLayout({

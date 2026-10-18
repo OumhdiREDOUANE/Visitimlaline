@@ -51,37 +51,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-sand/20">
-        <div className="page-shell flex flex-col gap-8 py-16">
-          <header className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">{t('home.reviewsEyebrow')}</p>
-              <h2 className="mt-2 text-4xl">{t('home.reviewsTitle')}</h2>
-            </div>
-            <p className="rounded-full bg-surface px-4 py-2 text-sm font-bold text-terra">
-              4.9/5 ★
-            </p>
-          </header>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {[
-              ['Amelia', 'United Kingdom', 'Quad Adventure', 'The golden dunes and our guide made this the highlight of our Morocco trip.'],
-              ['Youssef', 'France', 'Sandboarding in the Dunes', 'Perfect for beginners, with beautiful Atlantic views and great local hospitality.'],
-              ['Sofia', 'Spain', 'Camel Caravan Experience', 'A calm, authentic ride along the coast. The mint tea at the end was unforgettable.'],
-            ].map(([name, country, activity, quote]) => (
-              <article key={name} className="card-interactive rounded-[28px] border border-sand/40 bg-surface p-6">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="font-bold">{name}</p>
-                  <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-muted">{country}</span>
-                </div>
-                <p className="mt-3 text-sm tracking-[0.12em] text-gold">★★★★★</p>
-                <p className="mt-3 text-sm leading-6 text-muted">“{quote}”</p>
-                <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-terra">{activity}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       <section className="page-shell grid gap-10 py-16 lg:grid-cols-[1fr_1.15fr]">
         <div>

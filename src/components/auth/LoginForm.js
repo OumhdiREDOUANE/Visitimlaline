@@ -54,6 +54,7 @@ export function LoginForm({ next }) {
     <form
       onSubmit={submit}
       className="flex flex-col gap-5"
+      method="POST"
     >
       <Field label={t('login.email')} htmlFor="email">
         <TextInput
