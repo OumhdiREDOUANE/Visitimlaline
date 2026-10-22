@@ -18,6 +18,7 @@
     "user:create": "node scripts/create-user.js"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.9.0",
     "jsqr": "^1.4.0",
     "next": "16.3.6",
     "qrcode": "^1.5.4",

@@ -1,12 +1,19 @@
 import { getBookedGuests } from '../db/bookings.js';
 
+
 export const SLOTS = [
   '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
   '14:00',
   '15:00',
-  '16:30',
-  '17:30',
+  '16:00',
+  '17:00',
+  '18:00',
+  
 ];
+
 
 export const CAPACITY_PER_SLOT = 8;
 

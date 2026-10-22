@@ -1,5 +1,5 @@
 import Link from 'next/link';
-
+import { getBookingWhatsAppUrl } from '@/lib/whatsapp.js';
 import { getI18n } from '@/lib/i18n/server.js';
 import { requireAdmin } from '@/lib/auth/guards.js';
 import {
@@ -193,11 +193,16 @@ export default async function AdminBookingsPage({
                   {t('adminBookings.guests')}
                 </th>
                 <th className="px-4 py-3">
-                  {t('adminBookings.total')}
-                </th>
-                <th className="px-4 py-3">
-                  {t('adminBookings.actions')}
-                </th>
+  {t('adminBookings.total')}
+</th>
+
+<th className="px-4 py-3">
+  {t('adminBookings.status')}
+</th>
+
+<th className="w-[150px] px-2 py-2">
+  {t('adminBookings.actions')}
+</th>
               </tr>
             </thead>
 
@@ -268,8 +273,64 @@ export default async function AdminBookingsPage({
                     <StatusBadge
                       status={row.status}
                       t={t}
+
                     />
                   </td>
+                  <td className="whitespace-nowrap px-2 py-2 align-middle">
+  {(() => {
+    const whatsappUrl = getBookingWhatsAppUrl({
+      ...row,
+      activity_title: titles[row.pack_slug ?? row.activity_slug],
+    });
+
+    if (!whatsappUrl) {
+      return (
+        <span className="text-xs text-muted">
+          Numéro invalide
+        </span>
+      );
+    }
+
+    return (
+      <a
+  href={
+    row.status === 'NOT PAID YET'
+      ? whatsappUrl
+      : undefined
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-disabled={row.status !== 'NOT PAID YET'}
+  tabIndex={row.status !== 'NOT PAID YET' ? -1 : 0}
+ className={`group inline-flex items-center justify-center gap-1.5
+  whitespace-nowrap rounded-lg px-2.5 py-2
+  text-[10px] font-bold transition-all duration-200
+  ${
+    row.status !== 'NOT PAID YET'
+      ? 'cursor-not-allowed bg-gray-200 text-gray-400 opacity-70 shadow-none'
+      : 'bg-[#25D366] text-white shadow-sm shadow-green-900/10 hover:-translate-y-0.5 hover:bg-[#1ebe5d] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98]'
+  }`}
+>
+  <svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="1.8"
+  className="h-3 w-3 shrink-0"
+
+  aria-hidden="true"
+>
+  <path
+    d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 8.6 8.6 0 0 1-4.1-1L3 20l1.1-4.9a8.5 8.5 0 1 1 16.9-3.6Z"
+  />
+  <path d="M8.5 9.5c.1 2.5 2 4.5 4.5 5" />
+</svg>
+  Confirmation WhatsApp
+</a>
+    );
+  })()}
+</td>
                 </tr>
               ))}
             </tbody>

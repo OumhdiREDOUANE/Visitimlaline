@@ -85,7 +85,7 @@ export default async function HomePage() {
             <h2 className="mt-2 text-4xl">{t('home.locationTitle')}</h2>
             <p className="mt-4 max-w-xl text-muted">{t('home.locationText')}</p>
             <a
-              href="https://maps.google.com/?q=Timlaline+Dunes+Morocco"
+              href="https://maps.app.goo.gl/gFXamnuyAHy5ftca8"
               target="_blank"
               rel="noreferrer"
               className="mt-5 inline-flex font-bold text-terra underline underline-offset-4"
@@ -96,7 +96,7 @@ export default async function HomePage() {
           <div className="overflow-hidden rounded-[28px] border border-sand/40 bg-surface p-2 shadow-[0_20px_60px_rgba(42,33,26,0.08)]">
             <iframe
               title={t('home.locationTitle')}
-              src="https://www.google.com/maps?q=Timlaline%20Dunes%20Morocco&output=embed"
+              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3428.35978789679!2d-9.821404!3d30.76448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzDCsDQ1JzUyLjEiTiA5wrA0OScxNy4xIlc!5e0!3m2!1sen!2sma!4v1792531864806!5m2!1sen!2sma"
               className="h-72 w-full rounded-[22px] border-0"
               loading="lazy"
             />

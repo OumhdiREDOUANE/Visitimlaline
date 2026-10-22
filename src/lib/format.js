@@ -67,11 +67,11 @@ export function formatDurationRange(
   const from = toNumber(min);
   const to = toNumber(max);
 
-  if (from === null) {
-    return '';
+  if (from == 0 && to == 0) {
+    return 'free time';
   }
 
-  if (to === null || from === to) {
+  if ((to == null&& from != null)  ||(from == to && from != null)  ) {
     return `${from} ${t('common.minutes')}`;
   }
 

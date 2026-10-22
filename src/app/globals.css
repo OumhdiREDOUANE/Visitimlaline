@@ -421,30 +421,165 @@
   transform: scaleX(-1);
 }
 
+
+
+@page {
+  size: A4;
+  margin: 8mm;
+}
+
 @media print {
   .no-print {
     display: none !important;
   }
 
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-area {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 14px !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .ticket-footer {
+    margin-top: 0 !important;
+    padding-top: 12px !important;
+    gap: 10px !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .ticket-footer > div {
+    border: 1px solid #e5dfd3 !important;
+    background: #F8F6F1 !important;
+    border-radius: 12px !important;
+    break-inside: avoid !important;
+  }
+
+  .ticket-footer a,
+  .ticket-location-link {
+    display: inline-block !important;
+    position: relative;
+    color: #8B6B3F !important;
+    text-decoration: underline !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .ticket-location-url {
+    display: block !important;
+    visibility: visible !important;
+    color: #8B6B3F !important;
+    font-size: 9px !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+
   .wave-edge::after,
   .wave-edge-above::after,
   .wave-edge-side::after {
-    display: none;
+    display: none !important;
   }
 
-  /* A waved card gave its straight border up to the wave, and the wave is
-     hidden above, so print needs an edge back. The card is the wrapper's first
-     child by construction — Card.js renders it before the strip. */
   .card-wave > :first-child {
     border: 1px solid #ddd !important;
   }
 
-  body {
-    background: #fff;
+  .print-area img {
+    max-width: 90px !important;
+    max-height: 90px !important;
   }
 
-  .print-area {
-    box-shadow: none !important;
-    border: 1px solid #ddd;
+  .print-area .text-3xl {
+    font-size: 22px !important;
   }
+
+  .print-area .gap-6 {
+    gap: 12px !important;
+  }
+
+  .print-area .gap-4 {
+    gap: 10px !important;
+  }
+
+  .print-area .p-6 {
+    padding: 14px !important;
+  }
+}
+
+
+
+.ticket-location-link,
+.ticket-location-url {
+  display: block;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media print {
+  .ticket-location-link,
+  .ticket-location-url {
+    display: block !important;
+    visibility: visible !important;
+    color: #8B6B3F !important;
+    text-decoration: underline !important;
+    pointer-events: auto !important;
+  }
+}
+
+/* PDF export: hide actions and preserve the ticket design */
+.print-area.pdf-exporting {
+  box-shadow: none !important;
+  border: 1px solid #ddd !important;
+  background: #fff !important;
+}
+
+.print-area.pdf-exporting .no-print {
+  display: none !important;
+}
+
+.print-area.pdf-exporting .ticket-footer {
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.print-area.pdf-exporting .ticket-footer > div {
+  background: #F8F6F1 !important;
+  border: 1px solid #e5dfd3 !important;
+}
+
+.print-area.pdf-exporting .ticket-location-link,
+.print-area.pdf-exporting .ticket-location-url {
+  color: #8B6B3F !important;
+  text-decoration: underline !important;
 }
