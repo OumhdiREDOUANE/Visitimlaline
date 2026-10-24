@@ -15,14 +15,16 @@ export function intlLocale(locale) {
   return INTL_LOCALES[locale] ?? INTL_LOCALES.fr;
 }
 
-export function formatMoney(amount, locale) {
-  const value = Number(amount);
+export function formatMoney(amountMad, locale, currency = 'MAD') {
+  const value = Number(amountMad);
+  const normalizedCurrency = currency === 'EUR' ? 'EUR' : 'MAD';
+  const amount = normalizedCurrency === 'EUR' ? value / 10 : value;
 
   return new Intl.NumberFormat(intlLocale(locale), {
     style: 'currency',
-    currency: 'MAD',
+    currency: normalizedCurrency,
     maximumFractionDigits: 0,
-  }).format(Number.isFinite(value) ? value : 0);
+  }).format(Number.isFinite(amount) ? amount : 0);
 }
 
 /** `YYYY-MM-DD` rendered without any timezone shift. */
@@ -65,11 +67,11 @@ export function formatDurationRange(
   const from = toNumber(min);
   const to = toNumber(max);
 
-  if (from === null) {
-    return '';
+  if (from == 0 && to == 0) {
+    return 'free time';
   }
 
-  if (to === null || from === to) {
+  if ((to == null&& from != null)  ||(from == to && from != null)  ) {
     return `${from} ${t('common.minutes')}`;
   }
 

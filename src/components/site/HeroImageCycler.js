@@ -1,0 +1,48 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
+const images = [
+  '/timlaline-desert-quad-adventure-sunset.jpg',
+  '/timlaline-desert-landscape-atlantic-morocco.jpg',
+];
+
+export function HeroImageCycler() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    const timer = window.setInterval(() => {
+      setCurrentIndex((previous) => (previous + 1) % images.length);
+    }, 1200);
+    return () => window.clearInterval(timer);
+  }, [reducedMotion]);
+
+  return (
+    <>
+      {images.map((src, index) => (
+        <Image
+          key={src}
+          src={src}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className={`absolute inset-0 object-contain object-center transition-opacity duration-300 ease-in-out sm:object-cover ${
+            index === currentIndex ? 'z-0 opacity-100' : '-z-10 opacity-0'
+          }`}
+        />
+      ))}
+    </>
+  );
+}

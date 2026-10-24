@@ -147,7 +147,8 @@ export function getAllBookings({
   status = null,
   activity = null,
   pack = null,
-} = {}) {
+  
+} = {}, role = 'admin') {
   let query = `
     SELECT
       id,
@@ -168,10 +169,16 @@ export function getAllBookings({
       created_at,
       arrived_at
     FROM bookings
+  
   `;
 
   const conditions = [];
   const params = [];
+  if (role === 'staff') {
+    conditions.push(`status != ?`);
+    params.push('NOT PAID YET');
+  }
+
 
   if (status) {
     conditions.push(`status = ?`);

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { getI18n } from '@/lib/i18n/server.js';
 import { getActivities } from '@/lib/services/activity.service.js';
 import { ActivityCard } from '@/components/site/ActivityCard.js';
+import { GalleryLightbox } from '@/components/site/GalleryLightbox.js';
 import { Card } from '@/components/ui/Card.js';
 import { Badge } from '@/components/ui/Badge.js';
 import { Button } from '@/components/ui/Button.js';
@@ -28,9 +29,9 @@ export async function generateMetadata({
 export default async function ActivityPage({
   params,
 }) {
-  const { t, locale } = await getI18n();
   const { slug } = await params;
-  const activities = getActivities();
+  const { t, locale, currency } = await getI18n();
+  const activities = getActivities(locale);
   const activity = activities.find(
     (item) => item.slug === slug
   );
@@ -54,6 +55,8 @@ export default async function ActivityPage({
     activity.duration_max,
     t
   );
+  const itinerary = activity.itinerary ?? [];
+  const galleryImages = [activity.hero, ...(activity.gallery ?? [])];
 
   return (
     <>
@@ -86,7 +89,8 @@ export default async function ActivityPage({
               <span className="text-2xl font-bold text-ink">
                 {formatMoney(
                   activity.price_from,
-                  locale
+                  locale,
+                  currency
                 )}
               </span>{' '}
               {t('common.perPerson')}
@@ -107,14 +111,14 @@ export default async function ActivityPage({
           </div>
         </div>
 
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
+        <div className="experience-image-frame relative aspect-[4/3] w-full overflow-hidden rounded-[22px]">
           <Image
             src={activity.hero}
             alt={activity.title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 45vw"
-            className="object-cover"
+            className="experience-card-image object-cover"
           />
         </div>
       </section>
@@ -138,53 +142,46 @@ export default async function ActivityPage({
           </h2>
 
           <ol className="mt-4 flex flex-col gap-4">
-            {(activity.itinerary ?? []).map(
-              ([label, text]) => (
-                <li
-                  key={label}
-                  className="border-l-2 border-terra pl-4"
-                >
-                  <p className="text-sm font-bold">
-                    {label}
-                  </p>
-                  <p className="text-sm text-muted">
-                    {text}
-                  </p>
-                </li>
-              )
-            )}
+            {itinerary.map(([label, text], index) => (
+              <li
+                key={label}
+                className="relative flex gap-4 animate-fade-up"
+              >
+                {index < itinerary.length - 1 ? (
+                  <span
+                    aria-hidden
+                    className="absolute left-4 top-9 h-[calc(100%+1rem)] w-px bg-terra/30"
+                  />
+                ) : null}
+                <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-terra text-xs font-bold text-white">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div className="pb-1">
+                  <p className="text-sm font-bold">{label}</p>
+                  <p className="mt-1 text-sm text-muted">{text}</p>
+                </div>
+              </li>
+            ))}
           </ol>
         </Card>
       </section>
 
-      {(activity.gallery ?? []).length > 0 ? (
+      {galleryImages.length > 0 ? (
         <section className="page-shell flex flex-col gap-4 pb-12">
           <h2 className="text-2xl">
             {t('activity.gallery')}
           </h2>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            {activity.gallery.map((source) => (
-              <div
-                key={source}
-                className="relative aspect-[4/3] overflow-hidden rounded-xl"
-              >
-                <Image
-                  src={source}
-                  alt={activity.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
+          <GalleryLightbox
+            images={galleryImages}
+            title={activity.title}
+          />
         </section>
       ) : null}
 
       {related.length > 0 ? (
         <section className="bg-ink/5">
-          <div className="page-shell flex flex-col gap-8 py-14">
+          <div className="page-shell flex flex-col gap-8 py-14 pb-28 lg:pb-14">
             <h2 className="text-3xl">
               {t('activity.relatedTitle')}
             </h2>
@@ -196,12 +193,29 @@ export default async function ActivityPage({
                   activity={item}
                   t={t}
                   locale={locale}
+                  currency={currency}
                 />
               ))}
             </div>
           </div>
         </section>
       ) : null}
+
+      <div className="no-print fixed inset-x-0 bottom-0 z-20 flex items-center justify-between gap-4 border-t border-ink/10 bg-surface/95 px-4 py-3 shadow-lg backdrop-blur-md lg:hidden">
+        <p className="text-sm text-muted">
+          {t('common.from')}{' '}
+          <span className="font-bold text-ink">
+            {formatMoney(activity.price_from, locale, currency)}
+          </span>
+          <span className="ml-1 text-xs">{t('common.perPerson')}</span>
+        </p>
+        <Button
+          href={`/booking?type=activity&slug=${activity.slug}`}
+          size="sm"
+        >
+          {t('activity.checkAvailability')}
+        </Button>
+      </div>
     </>
   );
 }

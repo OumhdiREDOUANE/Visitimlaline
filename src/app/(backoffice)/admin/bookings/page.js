@@ -1,10 +1,10 @@
 import Link from 'next/link';
-
+import { getBookingWhatsAppUrl } from '@/lib/whatsapp.js';
 import { getI18n } from '@/lib/i18n/server.js';
 import { requireAdmin } from '@/lib/auth/guards.js';
 import {
-  getAdminBookings,
-  getAdminBookingDetails,
+  getBookings,
+  getBookingDetails,
   toAdminBooking,
 } from '@/lib/services/booking.service.js';
 import { getActivities } from '@/lib/services/activity.service.js';
@@ -48,9 +48,19 @@ export default async function AdminBookingsPage({
 
   const activities = getActivities();
   const packs = getPacks();
-  const bookings = getAdminBookings(filters).map(
+  const bookings = getBookings('admin', filters).map(
     toAdminBooking
   );
+  const allBookings = getBookings('admin', {}).map(toAdminBooking);
+  const expectedGuests = allBookings
+    .filter((booking) => booking.status !== 'CANCELLED')
+    .reduce((total, booking) => total + Number(booking.guests || 0), 0);
+  const arrivedBookings = allBookings.filter(
+    (booking) => booking.status === 'ARRIVED'
+  ).length;
+  const expectedRevenue = allBookings
+    .filter((booking) => booking.status !== 'CANCELLED')
+    .reduce((total, booking) => total + Number(booking.total_price || 0), 0);
 
   const titles = Object.fromEntries(
     [...activities, ...packs].map((item) => [
@@ -64,7 +74,7 @@ export default async function AdminBookingsPage({
       (row) => String(row.id) === selected
     )
       ? toAdminBooking(
-          getAdminBookingDetails(Number(selected))
+          getBookingDetails(Number(selected))
         )
       : null;
 
@@ -78,6 +88,16 @@ export default async function AdminBookingsPage({
           {t('adminBookings.lead')}
         </p>
       </header>
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard label={t('adminBookings.kpiTotal')} value={allBookings.length} />
+        <KpiCard label={t('adminBookings.kpiGuests')} value={expectedGuests} />
+        <KpiCard label={t('adminBookings.kpiArrived')} value={arrivedBookings} />
+        <KpiCard
+          label={t('adminBookings.kpiRevenue')}
+          value={formatMoney(expectedRevenue, locale)}
+        />
+      </section>
 
       <form className="flex flex-wrap items-end gap-4">
         <Field
@@ -173,11 +193,16 @@ export default async function AdminBookingsPage({
                   {t('adminBookings.guests')}
                 </th>
                 <th className="px-4 py-3">
-                  {t('adminBookings.total')}
-                </th>
-                <th className="px-4 py-3">
-                  {t('adminBookings.actions')}
-                </th>
+  {t('adminBookings.total')}
+</th>
+
+<th className="px-4 py-3">
+  {t('adminBookings.status')}
+</th>
+
+<th className="w-[150px] px-2 py-2">
+  {t('adminBookings.actions')}
+</th>
               </tr>
             </thead>
 
@@ -248,8 +273,64 @@ export default async function AdminBookingsPage({
                     <StatusBadge
                       status={row.status}
                       t={t}
+
                     />
                   </td>
+                  <td className="whitespace-nowrap px-2 py-2 align-middle">
+  {(() => {
+    const whatsappUrl = getBookingWhatsAppUrl({
+      ...row,
+      activity_title: titles[row.pack_slug ?? row.activity_slug],
+    });
+
+    if (!whatsappUrl) {
+      return (
+        <span className="text-xs text-muted">
+          Numéro invalide
+        </span>
+      );
+    }
+
+    return (
+      <a
+  href={
+    row.status === 'NOT PAID YET'
+      ? whatsappUrl
+      : undefined
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-disabled={row.status !== 'NOT PAID YET'}
+  tabIndex={row.status !== 'NOT PAID YET' ? -1 : 0}
+ className={`group inline-flex items-center justify-center gap-1.5
+  whitespace-nowrap rounded-lg px-2.5 py-2
+  text-[10px] font-bold transition-all duration-200
+  ${
+    row.status !== 'NOT PAID YET'
+      ? 'cursor-not-allowed bg-gray-200 text-gray-400 opacity-70 shadow-none'
+      : 'bg-[#25D366] text-white shadow-sm shadow-green-900/10 hover:-translate-y-0.5 hover:bg-[#1ebe5d] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98]'
+  }`}
+>
+  <svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="1.8"
+  className="h-3 w-3 shrink-0"
+
+  aria-hidden="true"
+>
+  <path
+    d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 8.6 8.6 0 0 1-4.1-1L3 20l1.1-4.9a8.5 8.5 0 1 1 16.9-3.6Z"
+  />
+  <path d="M8.5 9.5c.1 2.5 2 4.5 4.5 5" />
+</svg>
+  Confirmation WhatsApp
+</a>
+    );
+  })()}
+</td>
                 </tr>
               ))}
             </tbody>
@@ -275,7 +356,19 @@ export default async function AdminBookingsPage({
           <dl className="grid gap-4 sm:grid-cols-3">
             <Detail
               label={t('adminBookings.customer')}
-              value={`${detail.customer_name} · ${detail.phone}`}
+              value={
+                <span className="flex flex-col gap-1">
+                  <span>{detail.customer_name}</span>
+                  <a
+                    href={`https://wa.me/${String(detail.phone).replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-terra underline underline-offset-4"
+                  >
+                    {detail.phone}
+                  </a>
+                </span>
+              }
             />
             <Detail
               label={t('adminBookings.product')}
@@ -339,6 +432,17 @@ function Detail({ label, value }) {
         {value}
       </dd>
     </div>
+  );
+}
+
+function KpiCard({ label, value }) {
+  return (
+    <Card className="card-interactive p-5">
+      <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted">
+        {label}
+      </p>
+      <p className="mt-3 font-display text-3xl text-ink">{value}</p>
+    </Card>
   );
 }
 

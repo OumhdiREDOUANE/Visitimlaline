@@ -29,7 +29,6 @@ export default async function LoginPage({
       </header>
 
       <Card
-        wave
         className="max-w-md p-6"
       >
         <LoginForm next={next} />

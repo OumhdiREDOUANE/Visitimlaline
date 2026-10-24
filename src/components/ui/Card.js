@@ -1,7 +1,7 @@
 import { WaveEdge } from '@/components/ui/WaveEdge.js';
 
 const CARD =
-  'border border-ink/10 bg-surface shadow-[0_10px_25px_rgba(38,7,7,0.08)]';
+  'border border-ink/10 bg-surface rounded-[28px] shadow-[0_20px_60px_rgba(23,19,15,0.06)]';
 
 /*
  * A waved card hands its straight border to the wave, so it is the same card

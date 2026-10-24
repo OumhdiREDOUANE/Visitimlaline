@@ -21,7 +21,7 @@ export function Alert({
   return (
     <div
       role={tone === 'error' ? 'alert' : 'status'}
-      className={`border px-4 py-3 text-sm ${box} ${className}`}
+      className={`rounded-2xl border px-4 py-3 text-sm ${box} ${className}`}
     >
       {title ? <p className="font-bold">{title}</p> : null}
       {children ? <div className="mt-0.5">{children}</div> : null}

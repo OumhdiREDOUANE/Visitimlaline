@@ -9,13 +9,13 @@ import { CategoryPill } from '@/components/site/CategoryPill.js';
 import { PackCard } from '@/components/site/PackCard.js';
 import { WaveEdge } from '@/components/ui/WaveEdge.js';
 import { Button } from '@/components/ui/Button.js';
+import { HeroImageCycler } from '@/components/site/HeroImageCycler.js';
 import { categoryKey } from '@/lib/format.js';
 
 export default async function HomePage() {
-  const { t, locale } = await getI18n();
-  const activities = getActivities();
-  const packs = getPacks();
-  const hero = activities[0] ?? packs[0];
+  const { t, locale, currency } = await getI18n();
+  const activities = getActivities(locale);
+  const packs = getPacks(locale);
   const categories = [
     ...new Set(
       activities.map(
@@ -26,47 +26,15 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="on-dark relative isolate flex min-h-[75vh] items-center overflow-hidden bg-ink text-cream">
-        {hero ? (
-          <Image
-            src={hero.hero}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="-z-10 object-cover"
-          />
-        ) : null}
+      <section className="on-dark relative isolate flex aspect-[2/1] w-full items-center overflow-hidden bg-ink text-cream sm:aspect-auto sm:min-h-[520px] lg:min-h-[760px]">
+        <HeroImageCycler />
 
-        {/* The hero photo is bright sand, so the scrim is weighted to the
-            left: the copy sits on the darkest part of the gradient and the
-            image keeps its light on the right instead of being flattened
-            by a uniform opacity. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-linear-to-r from-ink/95 via-ink/70 to-ink/20"
-        />
-
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 -z-10 h-32 bg-linear-to-t from-ink to-transparent"
-        />
-
-        <div className="page-shell flex w-full flex-col gap-6 py-20 sm:py-24">
-          <p className="eyebrow">{t('home.eyebrow')}</p>
-
-          <h1 className="max-w-3xl text-5xl sm:text-6xl">
-            {t('home.title')}
-          </h1>
-
-          <p className="max-w-xl text-base text-cream/85 sm:text-lg">
-            {t('home.subtitle')}
-          </p>
-
-          <div className="flex flex-wrap gap-3 pt-2">
+        <div className="page-shell relative z-20 flex min-h-full w-full flex-col justify-end">
+          <div className="flex flex-row flex-wrap items-center justify-end gap-2 pb-3 pt-2 sm:gap-3 sm:pb-10 lg:pb-14">
             <Button
               href="/experiences"
               size="lg"
+              className="!border-[#ff7f00] !bg-[#ff7f00] !px-3.5 !py-2 !text-[11px] !text-white hover:!bg-[#e06d00] sm:!px-7 sm:!py-4 sm:!text-sm"
             >
               {t('home.ctaExperiences')}
             </Button>
@@ -75,6 +43,7 @@ export default async function HomePage() {
               href="/packs"
               variant="onDark"
               size="lg"
+              className="!px-3.5 !py-2 !text-[11px] sm:!px-7 sm:!py-4 sm:!text-sm"
             >
               {t('home.ctaPacks')}
             </Button>
@@ -82,13 +51,58 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* The hero is `overflow-hidden` to clip its fill image, so a fringe
-          hung off it would be cut off; the strip between the two is where the
-          hero's ink reaches down from. */}
-      <WaveEdge
-        above
-        tone="ink"
-      />
+      
+
+      <section className="page-shell grid gap-10 py-16 lg:grid-cols-[1fr_1.15fr]">
+        <div>
+          <p className="eyebrow">{t('home.faqEyebrow')}</p>
+          <h2 className="mt-2 text-4xl">{t('home.faqTitle')}</h2>
+          <p className="mt-4 max-w-md text-muted">{t('home.faqLead')}</p>
+        </div>
+        <div className="flex flex-col gap-3">
+          {[
+            ['home.faqPaymentQuestion', 'home.faqPaymentAnswer'],
+            ['home.faqBeginnerQuestion', 'home.faqBeginnerAnswer'],
+            ['home.faqBringQuestion', 'home.faqBringAnswer'],
+            ['home.faqMeetingQuestion', 'home.faqMeetingAnswer'],
+          ].map(([question, answer]) => (
+            <details key={question} className="group rounded-2xl border border-ink/10 bg-surface px-5 py-4 shadow-sm">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">
+                {t(question)}
+                <span className="text-xl text-terra group-open:hidden">+</span>
+                <span className="hidden text-xl text-terra group-open:inline">−</span>
+              </summary>
+              <p className="pt-3 text-sm leading-6 text-muted">{t(answer)}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-ink/5">
+        <div className="page-shell grid gap-8 py-16 md:grid-cols-[1.1fr_1fr] md:items-center">
+          <div>
+            <p className="eyebrow">{t('home.locationEyebrow')}</p>
+            <h2 className="mt-2 text-4xl">{t('home.locationTitle')}</h2>
+            <p className="mt-4 max-w-xl text-muted">{t('home.locationText')}</p>
+            <a
+              href="https://maps.app.goo.gl/gFXamnuyAHy5ftca8"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex font-bold text-terra underline underline-offset-4"
+            >
+              {t('home.locationCta')}
+            </a>
+          </div>
+          <div className="overflow-hidden rounded-[28px] border border-sand/40 bg-surface p-2 shadow-[0_20px_60px_rgba(42,33,26,0.08)]">
+            <iframe
+              title={t('home.locationTitle')}
+              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3428.35978789679!2d-9.821404!3d30.76448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzDCsDQ1JzUyLjEiTiA5wrA0OScxNy4xIlc!5e0!3m2!1sen!2sma!4v1792531864806!5m2!1sen!2sma"
+              className="h-72 w-full rounded-[22px] border-0"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
 
       <section className="border-b border-ink/10 bg-surface">
         <div className="page-shell flex flex-wrap items-center gap-x-4 gap-y-3 py-5">
@@ -103,7 +117,6 @@ export default async function HomePage() {
             />
 
             {categories.map((category) => (
-              <>
               <CategoryPill
                 key={category}
                 href={`/experiences?category=${category}`}
@@ -113,7 +126,6 @@ export default async function HomePage() {
                   category
                 )}
               />
-              </>
             ))}
           </div>
         </div>
@@ -143,13 +155,19 @@ export default async function HomePage() {
               activity={activity}
               t={t}
               locale={locale}
+              currency={currency}
             />
           ))}
         </div>
       </section>
 
+      <WaveEdge
+        above
+        tone="ink"
+      />
+
       <section className="on-dark bg-forest text-cream">
-        <div className="page-shell grid gap-10 py-16 sm:grid-cols-2 sm:items-center">
+        <div className="page-shell grid gap-10 py-20 sm:grid-cols-2 sm:items-center">
           <div className="flex flex-col gap-5">
             <p className="eyebrow">{t('home.storyEyebrow')}</p>
             <h2 className="text-4xl">
@@ -168,25 +186,37 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-center">
-            {[
-              activities.length,
-              packs.length,
-            ].map((value, index) => (
-              <div
-                key={index}
-                className="border border-cream/15 bg-ink/10 px-4 py-8"
-              >
-                <p className="font-display text-4xl">
-                  {value}
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-cream/70">
-                  {index === 0
-                    ? t('nav.experiences')
-                    : t('nav.packs')}
-                </p>
-              </div>
-            ))}
+          <div className="relative min-h-[420px]">
+            <div className="absolute inset-x-8 top-0 overflow-hidden rounded-[2rem] border border-cream/20 shadow-[0_28px_70px_rgba(0,0,0,0.22)] sm:inset-x-12">
+              <Image
+                src="/timlaline-desert-landscape-atlantic-morocco.jpg"
+                alt=""
+                width={900}
+                height={1100}
+                className="h-[360px] w-full object-cover sm:h-[420px]"
+              />
+            </div>
+
+            <div className="card-interactive absolute left-0 top-16 rounded-2xl border border-cream/20 bg-ink/75 px-4 py-3 backdrop-blur-md">
+              <p className="font-display text-3xl">{activities.length}</p>
+              <p className="text-xs uppercase tracking-[0.14em] text-cream/70">
+                {t('home.statsExperiences')}
+              </p>
+            </div>
+
+            <div className="card-interactive absolute right-0 top-44 rounded-2xl border border-cream/20 bg-ink/75 px-4 py-3 backdrop-blur-md">
+              <p className="font-display text-3xl">{packs.length}</p>
+              <p className="text-xs uppercase tracking-[0.14em] text-cream/70">
+                {t('home.statsPacks')}
+              </p>
+            </div>
+
+            <div className="card-interactive absolute bottom-0 left-8 rounded-2xl border border-sand/40 bg-terra-deep/90 px-4 py-3 backdrop-blur-md sm:left-16">
+              <p className="font-display text-3xl">100%</p>
+              <p className="text-xs uppercase tracking-[0.14em] text-cream/80">
+                {t('home.statsGuiding')}
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -209,6 +239,7 @@ export default async function HomePage() {
               pack={pack}
               t={t}
               locale={locale}
+              currency={currency}
             />
           ))}
         </div>

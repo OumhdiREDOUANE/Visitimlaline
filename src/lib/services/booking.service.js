@@ -258,8 +258,8 @@ export async function   markBookingArrived(id) {
 }
 
 
-export function getAdminBookings(filters = {}) {
-  return getAllBookings(filters);
+export function getBookings(role,filters = {}) {
+  return getAllBookings(filters,role);
 }
 export function cancelAdminBooking(id) {
   const booking = getBookingById(id);
@@ -416,7 +416,7 @@ export function rescheduleAdminBooking(id, data) {
 
   return getBookingById(id);
 }
-export function getAdminBookingDetails(id) {
+export function getBookingDetails(id) {
   const booking = getBookingById(id);
 
   if (!booking) {

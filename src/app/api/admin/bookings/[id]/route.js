@@ -2,7 +2,7 @@ import { logRequest } from '@/lib/observability/route';
 import { requireRole } from '@/lib/auth';
 
 import {
-  getAdminBookingDetails,
+  getBookingDetails,
   toAdminBooking,
 } from '@/lib/services/booking.service';
 
@@ -22,7 +22,7 @@ async function handleGET(request, { params }) {
       );
     }
 
-    const booking = getAdminBookingDetails(Number(id));
+    const booking = getBookingDetails(Number(id));
 
     return Response.json(
       {
